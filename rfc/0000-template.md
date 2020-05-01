@@ -1,53 +1,65 @@
-*If a section has no content, write "None", or delete the section.*
-*Style: add double line breaks before and after `# Headers` or code blocks.*
-*Try to be concise.*
+*This document is a written proposal of some future effort.*
 
-# Summary
+*The italicised items should be deleted or commented out before submission.*
 
-*~One paragraph.*
+*If a section has no content, simply write "None", "Unspecified" or "NA".*
 
-# Background
+Authors: *Name One, Name Two*
 
-*What previous efforts, if any, have been made to solve this problem?*
+# Abstract
 
 ## Suggested Reading
 
 *Bulleted list suggested.*
 
-*If a team member would require certain technical information before reading the rest of this document, link to that information from this section.*
+*If a team member would require additional technical information before reading the rest of this document, link to that information from this section. Each item listed here adds to the total reading time for this document.*
+
+# Background
+
+*Write an introduction to the topic if helpful.*
 
 # Motivation
 
-*What technical problems does it aim to solve?*
+*What technical problems does this RFC aim to solve?*
 
-# Expected Outcomes
+# Previous Work
 
-*Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
+*What previous efforts, if any, have been made to solve these problems?*
+*Any other related efforts?*
 
 # Goals
 
 *Bulleted list suggested.*
 
-*List of goals. Ideally measurable ones.*
-
 # Non-Goals
 
-*Bulleted list suggested.*
+*Here is a chance to limit feature creep and reduce confusion.*
 
-*Here is your chance to limit feature creep. Here is your chance to limit feature confusion.*
+# Expected Outcomes
+
+*Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
 
 # RFC
 
-*Main body.*
+*Main body. Make the plan descriptive enough to encourage productive suggestions.*
 
 > *"I didn’t have time to write a short letter, so I wrote a long one instead."*
 > *--Mark Twain*
 
 # Deferred Decisions
 
-*List the decisions that this RFC explicitly does not make. Optionally list potential approaches to decisions.*
+*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed desisions.*
+
+# Other Considerations
+
+*Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
+
+# Open Questions
+
+*Use this section to invite specific feedback from reviewers.*
 
 ---
 
 *Final Checklist*
-*Would your RFC benefit from some last-minute visuals?*
+
+- *Would your RFC benefit from some last-minute visuals?*
