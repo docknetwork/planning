@@ -10,4 +10,8 @@ After an RFC is accepted, a more detailed implementaion specification is added a
 
 ---
 
+Want to change something about this repo? Submit a PR. The guidelines provided in the templates are intendend to help you; they need not be set-in-stone.
+
 Treat this repository as public.
+
+*Thanks to https://eng.lyft.com/awesome-tech-specs-86eea8e45bb9 for the guide on which these templates were initially based.*
