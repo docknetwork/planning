@@ -2,7 +2,7 @@
 
 Authors: *Name One, Name Two*
 
-[RFC](../xxxx-feature-name.md)
+[RFC](../rfc/0000-template.md)
 
 ## Design Summary
 
