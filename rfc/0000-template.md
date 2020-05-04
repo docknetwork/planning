@@ -1,6 +1,6 @@
 *This document is a written proposal of some future effort.*
 
-*The italicised items should be deleted or commented out before submission.*
+*The italicized items should be deleted or commented out before submission.*
 
 *If a section has no content, simply write "None", "Unspecified" or "NA".*
 
@@ -48,7 +48,7 @@ Authors: *Name One, Name Two*
 
 # Deferred Decisions
 
-*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed desisions.*
+*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed decisions.*
 
 # Other Considerations
 

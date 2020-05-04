@@ -16,7 +16,7 @@ Authors: *Name One, Name Two*
 
 *This is the main body of the specification. It splits the problem into pieces.*
 
-*Consider whether this is going to be an imperative or declaritive style spec.*
+*Consider whether this is going to be an imperative or declarative style spec.*
 
 *Examples of type declarations and function signatures may be useful in communicating your vision. This document needs not specify detailed APIs. APIs will be proposed and reviewed within their respective codebases along with unit tests when possible.*
 
@@ -28,7 +28,7 @@ Authors: *Name One, Name Two*
 
 # Teaching
 
-*How will the completed project be documented? How will new fuctionalities be demonstrated? Will demos be part of the requirements for this project or will they be proposed in a separate RFC?*
+*How will the completed project be documented? How will new functionalities be demonstrated? Will demos be part of the requirements for this project or will they be proposed in a separate RFC?*
 
 *If the single deliverable for this project is already a demo, you may want to write "NA" for this section.*
 
@@ -48,5 +48,5 @@ Authors: *Name One, Name Two*
 
 *Final Checklist*
 
-- *Can you think of a likely point of disagreement? If so, make sure a stance is stated clearly in this document so team members can argue over it now rather than during implementaion.*
+- *Can you think of a likely point of disagreement? If so, make sure a stance is stated clearly in this document so team members can argue over it now rather than during implementation.*
 - *Try to think of which relevant implementation details are still unstated.*

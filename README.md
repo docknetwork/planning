@@ -17,7 +17,7 @@ Couple arbitrary decisions for style consistency:
 
 ---
 
-Want to change something about this repo? Go ahead. The guidelines provided are intendend to help you; they need not be set-in-stone.
+Want to change something about this repo? Go ahead. The guidelines provided are intended to help you; they need not be set-in-stone.
 
 Treat this repository as public. It will likely be published later.
 
