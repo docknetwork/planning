@@ -4,15 +4,15 @@ Authors: *Name One, Name Two*
 
 [RFC](../xxxx-feature-name.md)
 
-# Design Summary
+## Design Summary
 
 *No summary comes to mind? That's ok. Just write "None"*
 
-# Post-RFC Decisions
+## Post-RFC Decisions
 
 *Did the RFC defer any decisions? You can specify them here or leave them for the implementer to resolve.*
 
-# Spec
+## Spec
 
 *This is the main body of the specification. It splits the problem into pieces.*
 
@@ -22,25 +22,25 @@ Authors: *Name One, Name Two*
 
 *It's inevitable that plans be imperfect. In some cases the implementer will submit a PR to make changes to the spec.*
 
-# Measuring Impact
+## Measuring Impact
 
 *Will the results of this project be measurable. If so, how?*
 
-# Teaching
+## Teaching
 
 *How will the completed project be documented? How will new functionalities be demonstrated? Will demos be part of the requirements for this project or will they be proposed in a separate RFC?*
 
 *If the single deliverable for this project is already a demo, you may want to write "NA" for this section.*
 
-# Security, Privacy, Risks
+## Security, Privacy, Risks
 
-# Milestones
+## Milestones
 
 *To keep your project on track, divide all work into key accomplishments and assign time predictions.*
 *This section will not stay up to date. Once the project is started, a project manager will track*
 *deadlines elsewhere.*
 
-# Open Questions
+## Open Questions
 
 *Use this section to invite specific feedback from reviewers.*
 

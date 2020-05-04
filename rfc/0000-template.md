@@ -6,7 +6,7 @@
 
 Authors: *Name One, Name Two*
 
-# Abstract
+## Abstract
 
 ## Suggested Reading
 
@@ -14,47 +14,47 @@ Authors: *Name One, Name Two*
 
 *If a team member would require additional technical information before reading the rest of this document, link to that information from this section. Each item listed here adds to the total reading time for this document.*
 
-# Background
+## Background
 
 *Write an introduction to the topic if helpful.*
 
-# Motivation
+## Motivation
 
 *What technical problems does this RFC aim to solve?*
 
-# Previous Work
+## Previous Work
 
 *What previous efforts, if any, have been made to solve these problems?*
 *Any other related efforts?*
 
-# Goals
+## Goals
 
 *Bulleted list suggested.*
 
-# Non-Goals
+## Non-Goals
 
 *Here is a chance to limit feature creep and reduce confusion.*
 
-# Expected Outcomes
+## Expected Outcomes
 
 *Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
 
-# RFC
+## RFC
 
 *Main body. Make the plan descriptive enough to encourage productive suggestions.*
 
 > *"I didn’t have time to write a short letter, so I wrote a long one instead."*
 > *--Mark Twain*
 
-# Deferred Decisions
+## Deferred Decisions
 
 *List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed decisions.*
 
-# Other Considerations
+## Other Considerations
 
 *Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
 
-# Open Questions
+## Open Questions
 
 *Use this section to invite specific feedback from reviewers.*
 
