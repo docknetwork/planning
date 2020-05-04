@@ -2,11 +2,11 @@
 
 ## RFC
 
-Anyone is free to propose new developments by writing an RFC (request for comment). Submit an RFC by copying and filling the template `rfc/0000-template.md`. Create new file `rfc/xxxx-feature-name.md`. When you are ready for your feature to be reviewed, submit a pr.
+Anyone is free to propose new developments by writing an RFC (request for comment). Submit an RFC by copying and filling the template [rfc/0000-template.md](./rfc/0000-template.md). Create new file `rfc/xxxx-feature-name.md`. When you are ready for your feature to be reviewed, submit a pr.
 
 ## Spec
 
-An implementation spec is the next step after the RFC. Copy the template `spec/0000-template.md` over to `spec/xxxx-feature-name.md` to get started. The spec can be submitted in the same PR as your RFC or it can be submitted separately.
+An implementation spec is the next step after the RFC. Copy the template [spec/0000-template.md](./spec/0000-template.md) over to `spec/xxxx-feature-name.md` to get started. The spec can be submitted in the same PR as your RFC or it can be submitted separately.
 
 ## Markdown Formatting
 
