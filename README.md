@@ -6,7 +6,7 @@ Anyone is free to propose new developments by writing an RFC (request for commen
 
 ## Spec
 
-After an RFC is reviewed, the next step is to submit an implementation spec. Copy the template `spec/0000-template.md` over to `spec/xxxx-feature-name.md` to get started.
+An implementation spec is the next step after the RFC. Copy the template `spec/0000-template.md` over to `spec/xxxx-feature-name.md` to get started. The spec can be submitted in the same PR as your RFC or it can be submitted separately.
 
 ## Markdown Formatting
 
