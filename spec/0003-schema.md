@@ -97,7 +97,7 @@ pub enum Runtime where
 	{
     System: system::{Module, Call, Storage, Config, Event},
     .....,
-		DIDModule: did::{Module, Call, Storage, Event},
+    DIDModule: did::{Module, Call, Storage, Event},
     ....,
     SchemaModule: schema::{Module, Call, Storage}
 	}
@@ -113,6 +113,8 @@ pub enum Runtime where
 1. An invalid signature while adding a schema should fail with error `InvalidSig`.
 
 ### SDK
+
+For validating with JSON-schema, the package [jsonschema](https://www.npmjs.com/package/jsonschema) is used.
 
 #### API
 TODO: More details should be added for the parameters of functions in the actual code in conformance with JSDoc.  
@@ -155,7 +157,7 @@ class SchemaDetail {
 
   }
 
-  // Update the object with `author` key
+  // Update the object with `author` key. Repeatedly calling it will keep resetting the author
   // did can be a DID hex identifier or full DID
   setAuthor(did) {
 
@@ -163,13 +165,15 @@ class SchemaDetail {
 
   // Update the object with `signature` key. This method is used when 
   // signing key/capability is not present and the signature is received from outside.
+  // Repeatedly calling it will keep resetting the `signature` key.
   // The signature must be one of the supported objects
   setSignature(signature) {
 
   }
 
   // Serializes the object using `getSerializedSchemaDetail` and then signs it using the given 
-  // polkadot-js pair. 
+  // polkadot-js pair. The object will be updated with key `signature`. Repeatedly calling it will 
+  // keep resetting the `signature` key
   sign(pair) {
 
   }
@@ -194,11 +198,48 @@ class VerifiableCredential {
   }
 
   // Check that the credential is compliant with given JSON schema, meaning `credentialSubject` has the 
-  // structure specified by the given JSON schema.
+  // structure specified by the given JSON schema. Use `validateCredentialSchema` but exclude subject's id.
+  // Allows issuer to validate schema before adding it.
   validateSchema(schema) {
+  }
+
+  // The method will check that the `credentialSubject` is consistent with `credentialSchema` 
+  // if `credentialSchema` if `credentialSchema` is present. Uses `validateSchema`.
+  async verify(resolver, compactProof = true, forceRevocationCheck = true, revocationAPI) {
+  }
+}
+```
+Similarly, for `VerifiablePresentation` in `src/verifiable-presentation.js`, the `verify` method must be updated to verify the credential schema
+```js
+class VerifiablePresentation {
+  // The method will check for schema validation using the same logic used by verify credential
+  async verify(challenge, domain, resolver, compactProof = true, forceRevocationCheck = true, revocationAPI) {
   }
 }
 ```
 
+For credential and presentation verification to validate according to the schema, update functions `verifyCredential` 
+and `verifyPresentation` in `src/utils/vc.js`. Declare a function called `validateCredentialSchema` in `src/utils/vc.js`.
+```js
+// The function uses `jsonschema` package to verify that the `credential`'s subject `credentialSubject` has the JSON schema `schema`
+function validateCredentialSchema(credential, schema) {
+}
+```
+
 #### Tests
-TODO
+
+1. `SchemaDetail` accepts the id optionally and generates id of correct size when id is not given.
+1. `SchemaDetail`'s `setAuthor` will set the author and accepts a DID identifier or full DID. 
+1. `SchemaDetail`'s `setSignature` will accepts signature only of the supported types and set the signature key of the object. 
+1. `SchemaDetail`'s `sign` will generate the signature on the schema detail and the signature is verifiable.
+1. `SchemaDetail`'s `validateSchema` will check that the given schema is a valid JSON-schema.
+1. `SchemaDetail`'s `toJSON` will generate a JSON that can be sent to chain.
+1. `validateCredentialSchema` should validate given credential's schema with the given JSON-schema. Test the following cases
+    - `credentialSubject` has same fields and fields have same types than JSON-schema
+    - `credentialSubject` has same fields but fields have different type than JSON-schema
+    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is false.
+    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is true.
+1. `VerifiableCredential`'s `setSchema` should appropriately set `credentialSchema`.
+1. `VerifiableCredential`'s `validateSchema` should validate the `credentialSubject` with given JSON schema.
+1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the subject.
+1. The `verify` and `verifyPresentation` should detect a subject with incompatible schema in `credentialSchema.`
