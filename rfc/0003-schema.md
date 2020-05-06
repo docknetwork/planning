@@ -4,11 +4,12 @@ Authors: Lovesh Harchandani
 The schema in a credential describes the structure of the credential, meaning the fields present, their data types and the constraints on the field values. The format of the schema is JSON and follows the JSON schema standard. The schema is stored on the chain and is referenced inside the credential. The schema applies to the claims (properties of credential subject) in the credential.
 
 ## Suggested Reading
-- [JSON Schema](https://json-schema.org/)
-- [JSON Schema IETF draft](https://tools.ietf.org/html/draft-handrews-json-schema-02)
+- [Schema](https://json-schema.org/understanding-json-schema/about.html)
+- [Basics of JSON Schema](https://json-schema.org/understanding-json-schema/basics.html)
+- [Step-By-Step guide to JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html)
 - [Verifiable Credentials JSON Schema Specification](https://w3c-ccg.github.io/vc-json-schemas/)
 - [Github repo for CCG's JSON Schema Spec](https://github.com/w3c-ccg/vc-json-schemas), contains [sample code](https://github.com/w3c-ccg/vc-json-schemas/blob/master/hypothetical-use-cases/cmtr/cmtr-v0.1.spec.js) showing schema validation
-- [JSON Schema Validation](https://www.ietf.org/archive/id/draft-handrews-json-schema-validation-02.txt)
+- Optionally, read the [JSON schema core spec](http://json-schema.org/draft/2019-09/json-schema-core.html) and [validation spec](http://json-schema.org/draft/2019-09/json-schema-validation.html)
 
 ## Background
 None
@@ -23,7 +24,7 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 - Support storing schemas on chain
 - Support querying schemas from chain
 - Support adding a schema to a credential using SDK.
-- Support validating a a credential (and presentation) with the specified schema using SDK.
+- Support validating a credential (and presentation) with the specified schema using SDK.
 
 ## Non-Goals
 - On-chain validation of JSON schema.
@@ -35,15 +36,26 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 - Showcase standard schemas like [PR card](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/sicpa/credentials/PermanentResidentCard.json), [BoL](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/BillOfLading.json) , [QP Inbond](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/QPInBond.json) and some Covid-19 creds like [Healthcare Worker Passport](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.kdkhzpmqto5s), [Proof of Health Status](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.4371z63wgb1t)
 
 ## RFC
-The VCDM spec does not mandate how a schema should be represented but gives the freedom of choosing JSON schema or JSON-LD schema. The RFC is choosing JSON schema over JSON-LD schema for now as it has implementation in JS and and is documented. Attempt to use JSON-LD schema failed (more detail in **Other Considerations** section). The schema of a credential is determined by the issuer but not necessearily created by the issuer.    
-Each schema will be created on a chain with a unique id of 32 bytes and the value for the id will be a JSON object. Writing the schema requires a DID as the author's identity implicitly attaches weight to the schema. Schemas can only be created but cannot be deleted as deleting a schema can cause the dependent credentials to be unparsable. Schema can only be retrieved with their id and thus schema can be stored in map in chain-storage with a fixed size id and (max-size) JSON string as value. Note that Substrate runtime will not parse JSON during extrinsic and will treat it as a bytearray with maximum size of 1024 bytes. Schema validation is not done by the chain as it is expensive and the cost to validate cannot be merely predicted by the size of the schema and thus the current weight system in Substrate is ineffective. As a result, it is the client's (SDK) responsibility to validate the schema. The reason for supporting only JSON and not a hashlink for schema extrinsic is that hashlink schemas can anyway be resolved in the SDK, no need to support them on chain.
-The SDK supports creating, verifying, writing and reading schema from the chain. A schema is created by directly passing the complete JSON to the SDK. The SDK should also support creating credentials with schema (in the builder) in the `credentialSchema` key and validating credentials with the schema and complain when credential (presentation's credentials as well) fails to satisfy the schema. The SDK should continue to support credentials without a schema (`credentialSchema`).  
+
+- The VCDM spec does not mandate how a schema should be represented but gives the freedom of choosing JSON schema or JSON-LD schema. 
+- The RFC is choosing JSON schema over JSON-LD schema for now as it has implementation in JS and and is documented. Attempt to use JSON-LD schema failed (more detail in **Other Considerations** section). 
+- The schema of a credential is determined by the issuer but not necessarily created by the issuer.
+- Each schema will be created on a chain with a unique id of 32 bytes and the value for the id will be a JSON object. 
+- Writing the schema requires a DID as the author's identity implicitly attaches weight to the schema. 
+- Schemas can only be created but cannot be deleted as deleting a schema can cause the dependent credentials to be unparsable. 
+- Schema can only be retrieved with their id and thus schema can be stored in map in chain-storage with a fixed size id and (max-size) JSON string as value. 
+- Note that Substrate runtime will not parse JSON during extrinsic and will treat it as a bytearray with maximum size of 1024 bytes. 
+- Schema validation is not done by the chain as it is expensive and the cost to validate cannot be merely predicted by the size of the schema and thus the current weight system in Substrate is ineffective. As a result, it is the client's (SDK) responsibility to validate the schema. 
+- The reason for supporting only JSON and not a hashlink for schema extrinsic is that hashlink schemas can anyway be resolved in the SDK, no need to support them on chain.
+- The SDK supports creating, verifying, writing and reading schema from the chain. 
+- A schema is created by directly passing the complete JSON to the SDK. The SDK should also support creating credentials with schema (in the builder) in the `credentialSchema` key and validating credentials with the schema and complain when credential (presentation's credentials as well) fails to satisfy the schema. 
+- The SDK should continue to support credentials without a schema (`credentialSchema`).  
+
 To write a schema on chain, the entire JSON document should be sent with a unique schema id and the DID's signature. The JSON document is serialized using JCS serialization.
-For example the following JSON document could be sent:
+                            For example the following JSON document could be sent:
 ```json
 {
   "type": "JsonSchemaValidator2018",
-   // Note that the value of id key is same as the value of `id` in the `credentialSchema` field of the above credential
   "name": "AlumniCredSchema",
   "version": "1.0.0",
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -68,7 +80,7 @@ will format the received information as follows:
 ```json
 {
    "type": "JsonSchemaValidator2018",
-   // Note that the value of id key is same as the value of `id` in the `credentialSchema` field of the above credential
+   // Note that the value of id key is same as the value of `id` in the `credentialSchema` field of the credential below.
    "id": "schema:dock:5C78GCA......",
    "name": "AlumniCredSchema",
    "version": "1.0.0",
@@ -103,7 +115,7 @@ The schema in a credential will be specified as
 }
 ```
 
-The resulting credential will this look like
+The resulting credential will look like this
 ```json
 {
    "@context": [
@@ -164,7 +176,7 @@ The schema can allow for fields not defined in the schema but with certain restr
     }
 }
 ``` 
-In the above schema, the JSON object can have additional properties but they have to be of JSON type
+In the above schema, the JSON object can have additional properties but they have to be of bool type
 ```json
 // This is valid as no additional property
 {
@@ -246,7 +258,7 @@ In the above example, the schema defines a nested structure where the `degree` f
 
 ## Deferred Decisions
 The schema extrinsic allows a large blob of data to be sent to the node. Currently this is limited by a small cap of 1KB but in future this might need to expanded. Moreover, a client writing schema of 100 bytes should pay less for state storage compared to someone writing schema of 900 bytes. For this dynamic weights for extrinsics should be implemented.  
-JSON-schema supports schema references with `$ref` attribute but the W3C spec [Verifiable Credentials JSON Schema Specification](https://w3c-ccg.github.io/vc-json-schemas/) does not specify them yet. We can however support them in future where the `$ref` key's value will be the Dock schema id (prepended with `/` to indicate root) and the SDK will have to recursively scan the credential schema to have find on the dependency schemas and then scan each of those schemas for more dependencies. Once all schemas have been discovered, add them to the schema validator (using `addSchema` if using `jsonschema`). Eg, consider the following case where the address schema is referenced in the person schema which is referenced in the man and woman schemas
+JSON-schema supports schema references with `$ref` attribute but the W3C spec [Verifiable Credentials JSON Schema Specification](https://w3c-ccg.github.io/vc-json-schemas/) does not specify them yet. We can however support them in the future where the `$ref` key's value will be the Dock schema id (prepended with `/` to indicate root) and the SDK will have to recursively scan the credential schema to find all the dependency schemas and then scan each of those schemas for more dependencies. Once all schemas have been discovered, add them to the schema validator (using `addSchema` if using `jsonschema`). Eg, consider the following case where the address schema is referenced in the person schema which is referenced in the `manSchema` schema
 ```js
 const addressSchema = {
   "id": "/schema:dock:address", // the schema id

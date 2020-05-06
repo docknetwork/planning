@@ -252,7 +252,7 @@ function validateCredentialSchema(credential, schema) {
     - `credentialSubject` has nested fields and given schema specifies the nested structure.
 1. `VerifiableCredential`'s `setSchema` should appropriately set `credentialSchema`.
 1. `VerifiableCredential`'s `validateSchema` should validate the `credentialSubject` with given JSON schema.
-1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the subject.
+1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the `credentialSubject`.
 1. The `verify` and `verifyPresentation` should detect a subject with incompatible schema in `credentialSchema.`
 
 
