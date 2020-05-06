@@ -64,7 +64,7 @@ For example the following JSON document could be sent:
 ```
 
 The schema is queried from the chain using its id resulting in the above JSON document and the author DID. The SDK 
-will format the received information as
+will format the received information as follows:
 ```json
 {
    "type": "JsonSchemaValidator2018",
