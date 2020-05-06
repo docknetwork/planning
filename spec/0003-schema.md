@@ -252,3 +252,21 @@ function validateCredentialSchema(credential, schema) {
 1. `VerifiableCredential`'s `validateSchema` should validate the `credentialSubject` with given JSON schema.
 1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the subject.
 1. The `verify` and `verifyPresentation` should detect a subject with incompatible schema in `credentialSchema.`
+
+
+## Measuring Impact
+Dock chain will have a the schemas specified in the RFC written on chain and the SDK would be able to issue credentials referring those. The wriiten schemas should be present in the SDK as JSON so that they can be imported by the calling the library.
+
+## Teaching
+The SDK will have example scripts for writing and reading schema on chain. There would be example scripts showing how to use schemas in credentials. A tutorial (concepts and impl tutorial) would be added for teaching schema.
+
+## Security, Privacy, Risks
+None
+
+## Milestones
+- Schema support in node
+- Schema creation and query support in SDK
+- Schema integration with current credentials and presentations.
+
+## Open Questions
+None
