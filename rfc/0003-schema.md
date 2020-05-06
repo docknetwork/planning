@@ -140,7 +140,7 @@ The resulting credential will this look like
 }
 ```
 
-Notice how the `credentialSubject` has `emailAddress` and `alumniOf` as its schema in `credentialSchema` requires those 2 fields.  
+Notice how the `credentialSubject` section has `emailAddress` and `alumniOf` as its schema in `credentialSchema` requires those 2 fields.  
 If a credential has multiple subjects, each subject should conform to the schema (after popping out the `id`).
 
 ### Specifying the type of fields not defined in the schema
