@@ -12,7 +12,7 @@ The schema in a credential describes the structure of the credential, meaning th
 None
 
 ## Motivation
-Schemas help the holders and verifiers set the expectations for the data contained in a credential. 
+Schemas help issuers, holders and verifiers set the expectations for the data contained in a credential. 
 
 ## Previous Work
 This RFC is suggesting the use of JSON schema as defined by the [CCG here](https://w3c-ccg.github.io/vc-json-schemas).
