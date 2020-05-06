@@ -257,7 +257,7 @@ function validateCredentialSchema(credential, schema) {
 
 
 ## Measuring Impact
-Dock chain will have a the schemas specified in the RFC written on chain and the SDK would be able to issue credentials referring those. The wriiten schemas should be present in the SDK as JSON so that they can be imported by the calling the library.
+Dock chain will have a the schemas specified in the RFC written on chain and the SDK would be able to issue credentials referring those. The written schemas should be present in the SDK as JSON so that they can be imported by the calling library.
 
 ## Teaching
 The SDK will have example scripts for writing and reading schema on chain. There would be example scripts showing how to use schemas in credentials. A tutorial (concepts and impl tutorial) would be added for teaching schema.
