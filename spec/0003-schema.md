@@ -1,3 +1,5 @@
+[RFC](../rfc/0003-schema.md)
+
 ## Design Summary
 Schemas are stored on chain and identified and retrieved by their unique id. A credential specifies the unique id of the schema that it adheres to.
 
