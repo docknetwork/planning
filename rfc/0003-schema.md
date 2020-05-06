@@ -1,3 +1,5 @@
+Authors: Lovesh Harchandani
+
 ## Abstract
 The schema in a credential describes the structure of the credential, meaning the fields present, their data types and the constraints on the field values. The format of the schema is JSON and follows the JSON schema standard. The schema is stored on the chain and is referenced inside the credential. The schema applies to the claims (properties of credential subject) in the credential.
 
