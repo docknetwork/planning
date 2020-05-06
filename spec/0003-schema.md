@@ -237,7 +237,7 @@ function validateCredentialSchema(credential, schema) {
 
 1. `SchemaDetail` accepts the id optionally and generates id of correct size when id is not given.
 1. `SchemaDetail`'s `setAuthor` will set the author and accepts a DID identifier or full DID. 
-1. `SchemaDetail`'s `setSignature` will accepts signature only of the supported types and set the signature key of the object. 
+1. `SchemaDetail`'s `setSignature` will only accept signature of the supported types and set the signature key of the object. 
 1. `SchemaDetail`'s `sign` will generate the signature on the schema detail and the signature is verifiable.
 1. `SchemaDetail`'s `validateSchema` will check that the given schema is a valid JSON-schema.
 1. `SchemaDetail`'s `toJSON` will generate a JSON that can be sent to chain.
