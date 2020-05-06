@@ -137,10 +137,163 @@ The resulting credential will this look like
 }
 ```
 
-Notice how the `credentialSubject` has `emailAddress` and `alumniOf` as its schema in `credentialSchema` requires those 2 fields.
+Notice how the `credentialSubject` has `emailAddress` and `alumniOf` as its schema in `credentialSchema` requires those 2 fields.  
+If a credential has multiple subjects, each subject should conform to the schema (after popping out the `id`).
+
+### Specifying the type of fields not defined in the schema
+
+The schema can allow for fields not defined in the schema but with certain restrictions using `additionalProperties`
+```json
+{
+   "type":"object",
+   "properties":{
+      "emailAddress":{
+         "type":"string",
+         "format":"email"
+      },
+      "alumniOf":{
+         "type":"string"
+      }
+   },
+   "required":["emailAddress", "alumniOf"],
+   "additionalProperties":{
+      "type": "bool" 
+    }
+}
+``` 
+In the above schema, the JSON object can have additional properties but they have to be of JSON type
+```json
+// This is valid as no additional property
+{
+   "alumniOf":"Example University",
+   "emailAddress":"john@example.org"
+}
+
+// This is valid as additional properties are of string type
+{
+   "alumniOf":"Example University",
+   "emailAddress":"john@example.org",
+   "name":"John Smith",
+   "location":"earth"
+}
+
+// This is invalid as additional property is not of string type
+{
+   "alumniOf":"Example University",
+   "emailAddress":"john@example.org",
+   "wasHonored":false,
+}
+```
+
+### Nested fields
+
+The schema can have nested fields
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "emailAddress": {
+      "type": "string",
+      "format": "email"
+    },
+    "alumniOf": {
+      "type": "string"
+    },
+    "degree": {   // notice the nesting here
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+      },
+      "required": ["name", "type"],
+      "additionalProperties": true,
+    }
+  },
+  "required": ["emailAddress", "alumniOf"],
+  "additionalProperties": false,
+}
+```
+In the above example, the schema defines a nested structure where the `degree` field has nested properties `name` and `type` and allows additional properties as well. The following are valid examples of JSON compliant with the above schema.
+```json
+{
+   "alumniOf":"Example University",
+   "degree":{
+      "type":"BachelorDegree",
+      "name":"Bachelor of Science and Arts",
+   },
+   "emailAddress":"john@example.org"
+}
+
+{
+   "alumniOf":"Example University",
+   "degree":{
+      "type":"BachelorDegree",
+      "name":"Bachelor of Science and Arts",
+      "location":"earth"    // additional property, wasn't specified in the schema.
+   },
+   "emailAddress":"john@example.org"
+}
+```
+
 
 ## Deferred Decisions
-The schema extrinsic allows a large blob of data to be sent to the node. Currently this is limited by a small cap of 1KB but in future this might need to expanded. Moreover, a client writing schema of 100 bytes should pay less for state storage compared to someone writing schema of 900 bytes. For this dynamic weights for extrinsics should be implemented.
+The schema extrinsic allows a large blob of data to be sent to the node. Currently this is limited by a small cap of 1KB but in future this might need to expanded. Moreover, a client writing schema of 100 bytes should pay less for state storage compared to someone writing schema of 900 bytes. For this dynamic weights for extrinsics should be implemented.  
+JSON-schema supports schema references with `$ref` attribute but the W3C spec [Verifiable Credentials JSON Schema Specification](https://w3c-ccg.github.io/vc-json-schemas/) does not specify them yet. We can however support them in future where the `$ref` key's value will be the Dock schema id (prepended with `/` to indicate root) and the SDK will have to recursively scan the credential schema to have find on the dependency schemas and then scan each of those schemas for more dependencies. Once all schemas have been discovered, add them to the schema validator (using `addSchema` if using `jsonschema`). Eg, consider the following case where the address schema is referenced in the person schema which is referenced in the man and woman schemas
+```js
+const addressSchema = {
+  "id": "/schema:dock:address", // the schema id
+  "type": "object",
+  "properties": {
+    "lines": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "zip": {"type": "string"},
+    "city": {"type": "string"},
+    "country": {"type": "string"}
+  },
+  "required": ["country"]
+}
+
+const personSchema = {
+  "id": "/schema:dock:person",
+  "type": "object",
+  "properties": {
+    "name": {"type": "string"},
+    "address": {"$ref": "/schema:dock:address"}, // notice the address schema id being referenced
+    "votes": {"type": "integer", "minimum": 1}
+  }
+
+const manSchema = {
+    "id": "/schema:dock:man",
+    "type": "object",
+    "properties": {
+      "type": {"$ref": "/schema:dock:person"},
+      "gender": {"type": "string"}
+      },
+      "votes": {"type": "integer", "minimum": 1}
+    }
+};
+```
+When the scanner is run over `personSchema`, the referenced schema `schema:dock:address` is returned.
+```js
+import {scan} from 'jsonschema/lib/scan';
+const s1 = scan('/', personSchema);
+console.log(s1.ref);
+> ref: { '/schema:dock:address': 0 }
+
+const s2 = scan('/', manSchema);
+console.log(s2.ref);
+> ref: { '/schema:dock:person': 0 }
+```
+`s1.ref` is a map of referenced schemas with the key contains the schema id (with leading `/`).  
+When the scanner is run over `manSchema`, the referenced schema `schema:dock:person` is returned but the schema `addressSchema` referenced by `personSchema` is not returned. Hence the recursive application of `scan` to the references.  
+An alternate is using `unresolvedRefs` as shown [here](https://github.com/tdegrunt/jsonschema#dereferencing-schemas).  
 
 ## Other Considerations
 JSON-LD schemas were the first choice for schemas but no open-source library exists no support validation according to schema. Using JSON-LD framing, the structure of the data can be matched but not the data-type, eg. number should be greater than 0, etc.

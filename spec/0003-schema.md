@@ -221,9 +221,14 @@ class VerifiablePresentation {
 For credential and presentation verification to validate according to the schema, update functions `verifyCredential` 
 and `verifyPresentation` in `src/utils/vc.js`. Declare a function called `validateCredentialSchema` in `src/utils/vc.js`.
 ```js
+import Validator from 'jsonschema/lib/validator';
+const validator = new Validator();
+
 // The function uses `jsonschema` package to verify that the `credential`'s subject `credentialSubject` has the JSON schema `schema`
 function validateCredentialSchema(credential, schema) {
+  // validator.validate(credential, schema) should `errors` as an empty array.
 }
+
 ```
 
 #### Tests
@@ -235,10 +240,14 @@ function validateCredentialSchema(credential, schema) {
 1. `SchemaDetail`'s `validateSchema` will check that the given schema is a valid JSON-schema.
 1. `SchemaDetail`'s `toJSON` will generate a JSON that can be sent to chain.
 1. `validateCredentialSchema` should validate given credential's schema with the given JSON-schema. Test the following cases
-    - `credentialSubject` has same fields and fields have same types than JSON-schema
+    - `credentialSubject` has same fields and fields have same types as JSON-schema
     - `credentialSubject` has same fields but fields have different type than JSON-schema
+    - `credentialSubject` is missing required fields from the JSON-schema and it should fail to validate.
+    - The schema's `properties` is missing the `required` key and `credentialSubject` can omit some of the `properties`.
     - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is false.
     - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is true.
+    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` has certain type.
+    - `credentialSubject` has nested fields and given schema specifies the nested structure.
 1. `VerifiableCredential`'s `setSchema` should appropriately set `credentialSchema`.
 1. `VerifiableCredential`'s `validateSchema` should validate the `credentialSubject` with given JSON schema.
 1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the subject.
