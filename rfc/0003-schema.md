@@ -31,7 +31,7 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 
 ## Expected Outcomes
 - A new substrate module for schema and its integration in SDK.
-- SDK supports schema in the credentials and parses the credential according to the schema.
+- SDK supports schema in the credentials and validates the credential's structure according to the schema.
 - New SDK tutorials for schema. The testnet is updated with schema support.
 - Showcase standard schemas like [PR card](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/sicpa/credentials/PermanentResidentCard.json), [BoL](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/BillOfLading.json) , [QP Inbond](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/QPInBond.json) and some Covid-19 creds like [Healthcare Worker Passport](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.kdkhzpmqto5s), [Proof of Health Status](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.4371z63wgb1t)
 
