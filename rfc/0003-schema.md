@@ -201,7 +201,7 @@ In the above schema, the JSON object can have additional properties but they hav
 }
 ```
 
-### Nested fields
+### Example: Nested fields
 
 The schema can have nested fields
 
