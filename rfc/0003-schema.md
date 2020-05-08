@@ -103,7 +103,7 @@ will format the received information as follows:
 }
 ```
 
-Any credential specifying the above as schema will have its `credentialSubject` be compliant with the schema.   
+The json representation of the `credentialSubject` within a credential specifying the above as schema is expected to satisfy the schema.
 The above schema states that there will be 2 properties called `emailAddress` which is a string and has the format of an email and `alumniOf` which is a string. Both properties are required to be present in the `credentialSubject` due to their mention in `required`. Also, `additionalProperties` is set to false indicating that `credentialSubject` must not contain any properties apart from the properties listed in `properties` (`id` is popped out before validation).  
 
 The schema in a credential will be specified as
