@@ -53,10 +53,9 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 - The SDK should continue to support credentials without a schema (`credentialSchema`).  
 
 To write a schema on chain, the entire JSON document should be sent with a unique schema id and the DID's signature. The JSON document is serialized using JCS serialization.
-                            For example the following JSON document could be sent:
+For example the following JSON document could be sent:
 ```json
 {
-  "type": "JsonSchemaValidator2018",
   "name": "AlumniCredSchema",
   "version": "1.0.0",
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -80,7 +79,6 @@ The schema is queried from the chain using its id resulting in the above JSON do
 will format the received information as follows:
 ```json
 {
-   "type": "JsonSchemaValidator2018",
    // Note that the value of id key is same as the value of `id` in the `credentialSchema` field of the credential below.
    "id": "schema:dock:5C78GCA......",
    "name": "AlumniCredSchema",
@@ -123,7 +121,7 @@ The resulting credential will look like this
       "https://www.w3.org/2018/credentials/v1",
       "https://www.w3.org/2018/credentials/examples/v1"
    ],
-   "id": "0x9b561796d3450eb2673fed26dd9c07192390177ad93e0835bc7a5fbb705d52bc",
+   "id": "uuid:0x9b561796d3450eb2673fed26dd9c07192390177ad93e0835bc7a5fbb705d52bc",
    "type": [
       "VerifiableCredential",
       "AlumniCredential"
