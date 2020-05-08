@@ -4,6 +4,7 @@ Authors: Lovesh Harchandani
 The schema in a credential describes the structure of the credential, meaning the fields present, their data types and the constraints on the field values. The format of the schema is JSON and follows the JSON schema standard. The schema is stored on the chain and is referenced inside the credential. The schema applies to the claims (properties of credential subject) in the credential.
 
 ## Suggested Reading
+- [VCDM spec section about Data Schemas](https://www.w3.org/TR/vc-data-model/#data-schemas)
 - [Schema](https://json-schema.org/understanding-json-schema/about.html)
 - [Basics of JSON Schema](https://json-schema.org/understanding-json-schema/basics.html)
 - [Step-By-Step guide to JSON Schema](https://json-schema.org/learn/getting-started-step-by-step.html)
