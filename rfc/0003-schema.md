@@ -37,7 +37,7 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 
 ## RFC
 
-- The VCDM spec does not mandate how a schema should be represented but gives the freedom of choosing JSON schema or JSON-LD schema. 
+- The VCDM spec does not mandate how a schema should be represented but gives the freedom of choosing JSON schema, JSON-LD schema, or some other data verification schema.
 - The RFC is choosing JSON schema over JSON-LD schema for now as it has implementation in JS and and is documented. Attempt to use JSON-LD schema failed (more detail in **Other Considerations** section). 
 - The schema of a credential is determined by the issuer but not necessarily created by the issuer.
 - Each schema will be created on a chain with a unique id of 32 bytes and the value for the id will be a JSON object. 
