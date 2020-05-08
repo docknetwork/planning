@@ -18,6 +18,7 @@ Constants
 /// Size of the schema id in bytes
 pub const ID_BYTE_SIZE: usize = 32;
 /// Maximum size of the schema object in bytes
+ // implementer may choose to implement this as a dynamic config option settable with the `parameter_type!` macro
 pub const SCHEMA_MAX_BYTE_SIZE: usize = 1024;
 
 /// The type of the schema id
