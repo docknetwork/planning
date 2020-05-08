@@ -1,7 +1,7 @@
 Authors: Lovesh Harchandani
 
 ## Abstract
-The schema in a credential describes the structure of the credential, meaning the fields present, their data types and the constraints on the field values. The format of the schema is JSON and follows the JSON schema standard. The schema is stored on the chain and is referenced inside the credential. The schema applies to the claims (properties of credential subject) in the credential.
+The schema in a credential describes the structure of the credential, meaning the fields present, their data types and the constraints on the field values. The format of the schema is JSON and follows the JSON schema standard. The schema is stored on the chain in a blob storage and is referenced inside the credential. The schema applies to the claims (properties of credential subject) in the credential.
 
 ## Suggested Reading
 - [VCDM spec section about Data Schemas](https://www.w3.org/TR/vc-data-model/#data-schemas)
@@ -22,8 +22,10 @@ In pursuit of [extensibility](https://w3c.github.io/vc-data-model/#extensibility
 This RFC is suggesting the use of JSON schema as defined by the CCG [here](https://w3c-ccg.github.io/vc-json-schemas).
 
 ## Goals
-- Support storing schemas on chain
-- Support querying schemas from chain
+
+- Support an immutable single-owner blob storage on chain.
+- Support storing schemas in the blob storage
+- Support querying schemas (using blob id) from chain
 - Support adding a schema to a credential using SDK.
 - Support validating a credential (and presentation) with the specified schema using SDK.
 
@@ -31,18 +33,22 @@ This RFC is suggesting the use of JSON schema as defined by the CCG [here](https
 - On-chain validation of JSON schema.
 
 ## Expected Outcomes
-- A new substrate module for schema and its integration in SDK.
+- A new substrate module for blob storage and its integration in SDK.
 - SDK supports schema in the credentials and validates the credential's structure according to the schema.
 - New SDK tutorials for schema. The testnet is updated with schema support.
 - Showcase standard schemas like [PR card](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/sicpa/credentials/PermanentResidentCard.json), [BoL](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/BillOfLading.json) , [QP Inbond](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/vendors/mavennet/credentials/QPInBond.json) and some Covid-19 creds like [Healthcare Worker Passport](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.kdkhzpmqto5s), [Proof of Health Status](https://docs.google.com/document/d/1F5TLvAqCxj1kaPuPe6JhdECixwpbhKpEAb8eeQuDGT4/edit#heading=h.4371z63wgb1t)
 
 ## RFC
 
+- A blob storage module is added to the chain where each blob has a unique id. Writing a blob requires a DID.
+- The blob storage module stores a map of id to the blob and the blob author. The id is 32 bytes and the blob is treated as 
+arbitrary bytes so it can be JSON, XML, CSV, etc.
+- Blobs once written cannot be deleted.
 - The VCDM spec does not mandate how a schema should be represented but gives the freedom of choosing JSON schema, JSON-LD schema, or some other data verification schema.
 - The RFC is choosing JSON schema over JSON-LD schema for now as it has implementation in JS and and is documented. Attempt to use JSON-LD schema failed (more detail in **Other Considerations** section). 
 - The schema of a credential is determined by the issuer but not necessarily created by the issuer.
-- Each schema will be created on a chain with a unique id of 32 bytes and the value for the id will be a JSON object. 
-- Writing the schema requires a DID as the author's identity implicitly attaches weight to the schema. 
+- Each schema will be stored on chain as a blob with a unique id of 32 bytes and the value for the id will be a JSON object and the author DID. 
+- The schema thus has an associated DID as the author's identity implicitly attaches weight to the schema. 
 - Schemas can only be created but cannot be deleted as deleting a schema can cause the dependent credentials to be unparsable. 
 - Schema can only be retrieved with their id and thus schema can be stored in map in chain-storage with a fixed size id and (max-size) JSON string as value. 
 - Note that Substrate runtime will not parse JSON during extrinsic and will treat it as a bytearray with maximum size of 1024 bytes. 

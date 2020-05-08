@@ -2,6 +2,7 @@
 
 ## Design Summary
 Schemas are stored on chain and identified and retrieved by their unique id. A credential specifies the unique id of the schema that it adheres to.
+Schemas are stored as blob in the blob storage module of the chain. The chain is agnostic to the contents of the blob and thus to schemas.
 
 ## Post-RFC Decisions
 None
@@ -15,49 +16,49 @@ Before continuing with the spec, read the RFC on schemas.
 
 Constants
 ```rust
-/// Size of the schema id in bytes
+/// Size of the blob id in bytes
 pub const ID_BYTE_SIZE: usize = 32;
-/// Maximum size of the schema object in bytes
+/// Maximum size of the blob in bytes
  // implementer may choose to implement this as a dynamic config option settable with the `parameter_type!` macro
-pub const SCHEMA_MAX_BYTE_SIZE: usize = 1024;
+pub const BLOB_MAX_BYTE_SIZE: usize = 1024;
 
-/// The type of the schema id
+/// The type of the blob id
 pub type Id = [u8; ID_BYTE_SIZE];
 ```
 
 Storage
 ```rust
-/// For each schema id, its author's DID and the schema object is stored in the map
+/// For each blob id, its author's DID and the blob is stored in the map
 decl_storage! {
-    trait Store for Module<T: Trait> as SchemaModule {
-        Schemas get(id): map dock::schema::Id => Option<(dock::did::Did, Vec<u8>)>;
+    trait Store for Module<T: Trait> as BlobModule {
+        Blobs get(id): map dock::blob::Id => Option<(dock::did::Did, Vec<u8>)>;
     }
 }
 ```
 
 Types
 ```rust
-/// When a new schema is being registered, the following object is sent
-/// When a schema is queried, the following object is returned.
+/// When a new blob is being registered, the following object is sent
+/// When a blob is queried, the following object is returned.
 #[derive(Encode, Decode, Clone, PartialEq, Debug)]
-pub struct SchemaDetail {
+pub struct Blob {
     id: dock::schema::Id,
-    schema: Vec<u8>,
+    blob: Vec<u8>,
     author: dock::did::Did,
 }
 ```
 
-New schema
+New blob
 ```rust
-/// Register a new schema after ensuring schema with the same id is not registered and then 
-/// verifying `did`'s signature on the schema
-/// `schema_detail` contains the id, author DID and bytes of the schema. The size of schema should be at 
-/// most `SCHEMA_MAX_BYTE_SIZE` bytes. The `schema_detail` wrapped in a [StateChange][statechange] before 
+/// Register a new blob after ensuring blob with the same id is not registered and then 
+/// verifying `did`'s signature on the blob
+/// `schema_detail` contains the id, author DID and the blob. The size of blob should be at 
+/// most `BLOB_MAX_BYTE_SIZE` bytes. The `blob` is wrapped in a [StateChange][statechange] before 
 /// serializing for signature verification.
-/// `signature` is the signature of the schema author on the `schema_detail`
+/// `signature` is the signature of the blob author on the `blob`
 pub fn new(
             origin,
-            schema_detail: dock::schema::SchemaDetail,
+            blob: dock::blob::Blob,
             signature: dock::did::DidSignature,
         ) -> DispatchResult
 ```
@@ -67,13 +68,13 @@ Errors
 decl_error! {
     /// Error for the token module.
     pub enum Error for Module<T: Trait> {
-        /// The schema is greater than `SCHEMA_MAX_BYTE_SIZE`
-        SchemaTooBig,
-        /// There is already a schema with same id
-        SchemaAlreadyExists,
+        /// The blob is greater than `BLOB_MAX_BYTE_SIZE`
+        BlobTooBig,
+        /// There is already a blob with same id
+        BlobAlreadyExists,
         /// There is no such DID registered
         DidDoesNotExist,
-        /// Signature verification failed while adding schema
+        /// Signature verification failed while adding blob
         InvalidSig
     }
 }
@@ -83,17 +84,17 @@ Events:
 No events for now.
 
 
-Add `SchemaDetail` to `StateChange`.
+Add `Blob` to `StateChange`.
 ```rust
 #[derive(Encode, Decode)]
 pub enum StateChange {
     KeyUpdate(did::KeyUpdate),
     ....,
-    SchemaDetail(schema::SchemaDetail)
+    Blob(blob::Blob)
 }
 ```
 
-Add `SchemaModule` in `construct_runtime` in `lib.rs`
+Add `BlobModule` in `construct_runtime` in `lib.rs`
 ```rust
 pub enum Runtime where
 		....
@@ -102,59 +103,60 @@ pub enum Runtime where
     .....,
     DIDModule: did::{Module, Call, Storage, Event},
     ....,
-    SchemaModule: schema::{Module, Call, Storage}
+    BlobModule: blob::{Module, Call, Storage}
 	}
 ```
 
 #### Tests
-1. Can add a schema with unique id, schema data of < `SCHEMA_MAX_BYTE_SIZE` bytes and a valid signature.
-1. Can add a schema with unique id, schema data of `SCHEMA_MAX_BYTE_SIZE` bytes and a valid signature.
-1. Can retrieve a valid schema and the schema details and author match the given ones.
-1. Adding a schema with size > `SCHEMA_MAX_BYTE_SIZE` fails with error `SchemaTooBig`.
-1. Adding a schema with already used id fails with error `SchemaAlreadyExists`.
-1. Adding a schema with an unregistered DID fails with error `DidDoesNotExist`.
-1. An invalid signature while adding a schema should fail with error `InvalidSig`.
+1. Can add a blob with unique id, blob data of < `BLOB_MAX_BYTE_SIZE` bytes and a valid signature.
+1. Can add a blob with unique id, blob data of `BLOB_MAX_BYTE_SIZE` bytes and a valid signature.
+1. Adding a blob with size > `BLOB_MAX_BYTE_SIZE` fails with error `BlobTooBig`.
+1. Can retrieve a valid blob and the blob contents and author match the given ones.
+1. Adding a blob with already used id fails with error `BlobAlreadyExists`.
+1. Adding a blob with an unregistered DID fails with error `DidDoesNotExist`.
+1. An invalid signature while adding a blob should fail with error `InvalidSig`.
 
 ### SDK
 
 For validating with JSON-schema, the package [jsonschema](https://www.npmjs.com/package/jsonschema) is used.
 
 #### API
-TODO: More details should be added for the parameters of functions in the actual code in conformance with JSDoc.  
-TODO: Add constants for schema id size and max schema size from Node section. 
 
-A new module for schema in `src/modules`
+Constants
 ```js
-class SchemaModule {
+const BLOB_MAX_BYTE_SIZE = // Retrieve them from chain constants;
+const BLOB_ID_MAX_BYTE_SIZE = // Retrieve them from chain constants;
+```
+
+A new module for blob in `src/modules`
+```js
+class BlobModule {
   constructor(api) {
     this.api = api;
-    this.module = api.tx.schemaModule;
+    this.module = api.tx.blobModule;
   }
   
   /**
-    Register a new schema on the chain
-    `schemaDetail` matches the `SchemaDetail` object on chain.
+    Register a new blob on the chain
+    `blob` matches the `Blob` object on chain.
   */
-  new(schemaDetail, signature) {
+  new(blob, signature) {
   }
 
   /**
-    Get schema with given id from the chain. Accepts a full schema id like schema:dock:0x... or just the 
-    hex identifier.
-    The returned schema would be formatted as specified in the RFC (including author DID, schema id) or an error is 
-    returned if schema is not in JSON format.
+    Get blob with given id from the chain. Accepts a full blob id like blob:dock:0x... or just the 
+    hex identifier. Returns error if cannot find blob.
   */
-  async getSchema(id) {
+  async getBlob(id) {
   }
 
-  // Serializes the schema detail for signing 
-  // before sending to the node
-  getSerializedSchemaDetail(schemaDetail) {
+  // Serializes the `Blob` for signing before sending to the node
+  getSerializedBlob(blob) {
   }
 }
 
-class SchemaDetail {
-  // Create a new `SchemaDetail` object
+class Schema {
+  // Create a new `Schema` object
   // id is optional, if not given, generate a random id
   constructor(id) {
 
@@ -174,20 +176,29 @@ class SchemaDetail {
 
   }
 
-  // Serializes the object using `getSerializedSchemaDetail` and then signs it using the given 
+  // Serializes the object using `getSerializedBlob` and then signs it using the given 
   // polkadot-js pair. The object will be updated with key `signature`. Repeatedly calling it will 
   // keep resetting the `signature` key
   sign(pair) {
 
   }
 
-  // Serializes to JSON for sending to the node. A full DID is converted to the 
+  // Serializes to JSON for sending to the node, as `Blob`. A full DID is converted to the 
   // hex identifier and signature object is converted to the enum
   toJSON() {
   }
 
   // Check that the given JSON schema is compliant with JSON schema spec mentioned in RFC
   static function validateSchema(json) {
+  }
+
+  /**
+    Get schema from from the chain using the given id, by querying the blob storage. 
+    Accepts a full blob id like blob:dock:0x... or just the hex identifier and the `DockAPI` object.
+    The returned schema would be formatted as specified in the RFC (including author DID, schema id) or an error is 
+    returned if schema is not found on the chain or in JSON format.
+  */
+  async static function getSchema(id, dockApi) {
   }
 }
 ```
@@ -236,12 +247,15 @@ function validateCredentialSchema(credential, schema) {
 
 #### Tests
 
-1. `SchemaDetail` accepts the id optionally and generates id of correct size when id is not given.
-1. `SchemaDetail`'s `setAuthor` will set the author and accepts a DID identifier or full DID. 
-1. `SchemaDetail`'s `setSignature` will only accept signature of the supported types and set the signature key of the object. 
-1. `SchemaDetail`'s `sign` will generate a signature on the schema detail, this signature is verifiable.
-1. `SchemaDetail`'s `validateSchema` will check that the given schema is a valid JSON-schema.
-1. `SchemaDetail`'s `toJSON` will generate a JSON that can be sent to chain.
+1. `Schema` accepts the id optionally and generates id of correct size when id is not given.
+1. `Schema`'s `setAuthor` will set the author and accepts a DID identifier or full DID. 
+1. `Schema`'s `setSignature` will only accept signature of the supported types and set the signature key of the object. 
+1. `Schema`'s `sign` will generate a signature on the schema detail, this signature is verifiable.
+1. `Schema`'s `validateSchema` will check that the given schema is a valid JSON-schema.
+1. `Schema`'s `toJSON` will generate a JSON that can be sent to chain.
+1. `Schema`'s `getSchema` will return schema in correct format.
+1. `Schema`'s `getSchema` throws error when no blob exists at the given id.
+1. `Schema`'s `getSchema` throws error when schema not in correct format.
 1. `validateCredentialSchema` should validate given credential's schema with the given JSON-schema. Test the following cases
     - `credentialSubject` has same fields and fields have same types as JSON-schema
     - `credentialSubject` has same fields but fields have different type than JSON-schema
@@ -261,14 +275,22 @@ function validateCredentialSchema(credential, schema) {
 Dock chain will have a the schemas specified in the RFC written on chain and the SDK would be able to issue credentials referring those. The written schemas should be present in the SDK as JSON so that they can be imported by the calling library.
 
 ## Teaching
-The SDK will have example scripts for writing and reading schema on chain. There would be example scripts showing how to use schemas in credentials. A tutorial (concepts and impl tutorial) would be added for teaching schema.
+
+The SDK will have example scripts for
+
+- writing and reading a blob in chain storage.
+- writing and reading schema on chain.
+- showing how to use schemas in credentials.
+
+A tutorial (concepts and impl tutorial) would be added for teaching schema.
 
 ## Security, Privacy, Risks
 None
 
 ## Milestones
-- Schema support in node
-- Schema creation and query support in SDK
+- Blob storage support in node.
+- Blob storage support in node.
+- Schema creation and query support in SDK.
 - Schema integration with current credentials and presentations.
 
 ## Open Questions
