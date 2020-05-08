@@ -310,7 +310,8 @@ When the scanner is run over `manSchema`, the referenced schema `schema:dock:per
 An alternate is using `unresolvedRefs` as shown [here](https://github.com/tdegrunt/jsonschema#dereferencing-schemas).  
 
 ## Other Considerations
-JSON-LD schemas were the first choice for schemas but no open-source library exists to support validation according to schema. Using JSON-LD framing, the structure of the data can be matched but not the data-type, eg. number should be greater than 0, etc.
+- JSON-LD schemas were the first choice for schemas but no open-source library exists to support validation according to schema. Using JSON-LD framing, the structure of the data can be matched but not the data-type, eg. number should be greater than 0, etc.
+- Briefly looked at [Shex](https://shex.io/) and [RDF schema](https://www.w3.org/TR/rdf-schema/) but this will need more research time.
 
 ## Open Questions
 - Should JSON-LD research be pursued more?
