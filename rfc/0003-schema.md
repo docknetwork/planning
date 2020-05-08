@@ -16,7 +16,7 @@ The schema in a credential describes the structure of the credential, meaning th
 None
 
 ## Motivation
-Schemas help issuers, holders and verifiers set the expectations for the data contained in a credential. 
+In pursuit of [extensibility](https://w3c.github.io/vc-data-model/#extensibility), VCDM makes an Open World Assumption; a credential can state anything. Schemas allow issuers to "opt-out" of some of the freedom VCDM allows. Issuers can concretely limit what a specific credential will say. In a closed world, a verifier can rely on the structure of a credential to enable new types of credential processing e.g. generating a complete and human-friendly graphical representation of a credential.
 
 ## Previous Work
 This RFC is suggesting the use of JSON schema as defined by the CCG [here](https://w3c-ccg.github.io/vc-json-schemas).
