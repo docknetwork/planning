@@ -42,7 +42,7 @@ Types
 /// When a blob is queried, the following object is returned.
 #[derive(Encode, Decode, Clone, PartialEq, Debug)]
 pub struct Blob {
-    id: dock::schema::Id,
+    id: dock::blob::Id,
     blob: Vec<u8>,
     author: dock::did::Did,
 }
@@ -162,6 +162,11 @@ class Schema {
 
   }
 
+  // Add the JSON schema to this object after checking that `jsonSchema` is a valid JSON schema.
+  // Check if JSON is valid.
+  setJSONSchema(jsonSchema) {
+  }
+
   // Update the object with `author` key. Repeatedly calling it will keep resetting the author
   // did can be a DID hex identifier or full DID
   setAuthor(did) {
@@ -247,8 +252,13 @@ function validateCredentialSchema(credential, schema) {
 
 #### Tests
 
+1. `BlobModule` can write new blobs on chain and read them.
+1. `BlobModule` fails to write blob with size greater then allowed.
+1. `BlobModule` fails to write blob with id already used.
+1. `BlobModule` can should throw error when cannot read blob with given id from chain.
 1. `Schema` accepts the id optionally and generates id of correct size when id is not given.
 1. `Schema`'s `setAuthor` will set the author and accepts a DID identifier or full DID. 
+1. `Schema`'s `setJSONSchema` will only accept valid JSON schema and set the schema key of the object. 
 1. `Schema`'s `setSignature` will only accept signature of the supported types and set the signature key of the object. 
 1. `Schema`'s `sign` will generate a signature on the schema detail, this signature is verifiable.
 1. `Schema`'s `validateSchema` will check that the given schema is a valid JSON-schema.
