@@ -267,18 +267,46 @@ function validateCredentialSchema(credential, schema) {
 1. `Schema`'s `getSchema` throws error when no blob exists at the given id.
 1. `Schema`'s `getSchema` throws error when schema not in correct format.
 1. `validateCredentialSchema` should validate given credential's schema with the given JSON-schema. Test the following cases
-    - `credentialSubject` has same fields and fields have same types as JSON-schema
-    - `credentialSubject` has same fields but fields have different type than JSON-schema
-    - `credentialSubject` is missing required fields from the JSON-schema and it should fail to validate.
-    - The schema's `properties` is missing the `required` key and `credentialSubject` can omit some of the `properties`.
-    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is false.
-    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is true.
-    - `credentialSubject` has extra fields than given schema specifies and `additionalProperties` has certain type.
-    - `credentialSubject` has nested fields and given schema specifies the nested structure.
+    1. `credentialSubject` has same fields and fields have same types as JSON-schema
+    1. `credentialSubject` has same fields but fields have different type than JSON-schema
+    1. `credentialSubject` is missing required fields from the JSON-schema and it should fail to validate.
+    1. The schema's `properties` is missing the `required` key and `credentialSubject` can omit some of the `properties`.
+    1. `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is false.
+    1. `credentialSubject` has extra fields than given schema specifies and `additionalProperties` is true.
+    1. `credentialSubject` has extra fields than given schema specifies and `additionalProperties` has certain type.
+    1. `credentialSubject` has nested fields and given schema specifies the nested structure.
 1. `VerifiableCredential`'s `setSchema` should appropriately set `credentialSchema`.
 1. `VerifiableCredential`'s `validateSchema` should validate the `credentialSubject` with given JSON schema.
 1. Utility methods `verifyCredential` and `verifyPresentation` should check if schema is incompatible with the `credentialSubject`.
 1. The `verify` and `verifyPresentation` should detect a subject with incompatible schema in `credentialSchema.`
+
+### Dev tasks
+
+The task breakdown as per above spec for both the node and SDK is as follows:
+
+- Mock API for getting and putting blob in Substrate
+- Node API for write and read blob, includes tests mentioned in the spec
+- Add class `BlobModule` in SDK. Support reading and writing blobs on chain through SDK. Write tests mentoned in impl spec
+- Write and read schemas from chain using the `Schema` class. Used `BlobModule` internally. Covers validating JSON shcema, serializing, signing, sending and querying the chain. Write corresponding tests mentoned in impl spec.
+- Integration with credentials: 
+  - `validateCredentialSchema` implementation and tests 15.1-15.4
+  - `validateCredentialSchema` tests 15.5-15.7
+  - `validateCredentialSchema` tests 15.8
+- Add `setSchema` in VerifiableCredential and test from impl spec
+- Add `validateSchema` in VerifiableCredential and test from impl spec
+- Update `verifyCredential` to check for valid schema and test from impl spec
+- Update `VerifiableCredential`'s verify method
+- Update `verifyPresentation` to check for valid schema and test from impl spec
+- Update `VerifiablePresentation`'s verify method and test from impl spec 
+- Add example script for blob module showing put and get
+- Add example script for schema module's builder pattern and then reading and writing the schema on chain
+- Add example script for showing schema validation.
+- Add example script for showing schema addition to credentials and their verification.
+- Add schemas specified in the RFC (Product, Bill of landing, covid-19 schemas) as JSON schemas in json files. Create a separate directory called schemas. 
+- Add example script to show integration of above schemas
+- Add concept doc describing schema, some content can be borrowed from RFC
+- Add tutorial for schema writing, reading, and integration in credentials.
+- Deployment of node. This must be done once we know the SDK works with node
 
 
 ## Measuring Impact
