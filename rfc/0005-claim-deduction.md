@@ -35,7 +35,7 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 
 ## Goals
 
-- Reduce necesary human interaction when acting on credentials
+- Reduce necesary human interaction when acting on credentials.
 - Stacked Credentials
 - Developer outreach through open source implementation and engaging demos
 
@@ -43,19 +43,22 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 
 - Logical induction, logical abduction
 - On-chain components
-- Embed derivations for "proof" of credentials (though this would be a bonus)
-- Submit as w3c spec (though we may choose to persue after a working implementation)
 
 ## Expected Outcomes
 
-- Derivation format, potentially usable as a "proof" in verifiable credentials.
-- Better understanding of the problem space.
-- Groundwork for new w3c proof type e.g. "DeductiveDerivation2020".
-- Street cred.
+- Derivation format, potentially usable as a "proof" in verifiable credentials
+- Groundwork for new w3c VCDM "proof" type e.g. "DeductiveDerivation2020"
+- Better understanding of the problem space
+- Street cred
 
 ## RFC
 
+This RFC proposes the development of, or integration with, two programs (functions).
 
+1. Derivation validator
+2. Theorem prover which finds derivations for use as input to the derivation validator
+
+This RFC also proposes use of the derivation validator in combination with a VCDM Verifier to verify (check the soundness of) composite claims. The VCDM Verifier verifies premises via ethos and the derivation validator validates derivations based on those premises.
 
 ## Deferred Decisions
 
@@ -71,22 +74,54 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
   - Downsides?
 - How can derivations refer to [blank nodes](https://en.wikipedia.org/wiki/Blank_node)?
   - Without a way to uniquely specify blank nodes, a verifier would sometimes need to determine a shuffling of blank nodes that allows the derivation to be valid. That "find a shuffling" problem is computationaly difficult (https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem).
+- For storage and computaional efficiency, multiple theorems may be proved by a single "batch" derivation.
 
 ## Other Considerations
 
 Some alternative aproaches were considered:
 
-As an alternative approach each composite claim could be described an shared as a program in some turing complete language. The program would analyze a "premises" claim graph to determine whether the a composite claim is true. Claim deduction would be performed by running the stored progam in some interpreter. TODO
+### Express rules in a turing complete language
 
-Cursory consideration was made for [ShEx](https://shex.io/shex-primer/index.html). TODO
+As an alternative approach each composite claim could be described and shared as a program of some turing complete language. The program would analyze a "premises" claim graph to determine whether the a composite claim is true. Claim deduction would be performed by running the stored progam. This would make soundness checking computationally hard. It's not known how theorem proving could fit into this model.
+
+### Express rules as [ShEx](https://shex.io/shex-primer/index.html)
+
+TODO
 
 *Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
 
 ## Open Questions
 
-How to represent logical rules. SPARQL? OWL? Regular expressions applied to the claim graph?
+### How to represent logical rules.
 
-What are some engaging example use-cases?
+SPARQL? OWL? Regular expressions applied to the claim graph?
+
+### What are some engaging example use-cases?
+
+### Expicit ethos
+
+Should ethical (ethos) arguments be expressed as implication relationships like "issuer-A is trustworthy -> claim1 ∧ claim2 ∧ ..."? An expanded form may look something like this:
+
+```
+// The following would always be passed as an axiom:
+∀ X, Y: (X 'claims Y) ∧ (X 'trustworthy 'true) -> Y
+
+// then verified credentials would look like this
+(issuer-A 'claims claim1)
+(issuer-A 'claims claim2)
+
+// and this assumption would be explicitly stated for each issuer
+(issuer-A 'trustworthy true)
+
+// claims would be "imported" like this
+∀ X, Y: (X        'claims Y     ) ∧ (X        'trustworthy 'true) -> Y
+        (issuer-A 'claims claim1) ∧ (issuer-A 'trustworthy 'true) -> claim1
+
+// either the theorem prover needs to be general enough to extract claims as shown above, or all
+// derivations need to be prefixed with claim "imports"
+```
+
+This may be a question best posed during implementation, when limitaions are better understood.
 
 ---
 
