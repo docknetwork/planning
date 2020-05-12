@@ -284,20 +284,20 @@ function validateCredentialSchema(credential, schema) {
 
 The task breakdown as per above spec for both the node and SDK is as follows:
 
-- Mock API for getting and putting blob in Substrate
-- Node API for write and read blob, includes tests mentioned in the spec
-- Add class `BlobModule` in SDK. Support reading and writing blobs on chain through SDK. Write tests mentoned in impl spec
-- Write and read schemas from chain using the `Schema` class. Used `BlobModule` internally. Covers validating JSON shcema, serializing, signing, sending and querying the chain. Write corresponding tests mentoned in impl spec.
+- Mock API for getting and putting blob in Substrate. A successful build with the defined methods is sufficient.
+- Node API for write and read blob, includes all tests for node mentioned in the spec.
+- Add class `BlobModule` in SDK. Support reading and writing blobs on chain through SDK. Write tests 1-4.
+- Write and read schemas from chain using the `Schema` class. Used `BlobModule` internally. Covers validating JSON schema, serializing, signing, sending and querying the chain. Write corresponding tests mentioned in impl spec. Write tests 5-14.
 - Integration with credentials: 
   - `validateCredentialSchema` implementation and tests 15.1-15.4
   - `validateCredentialSchema` tests 15.5-15.7
   - `validateCredentialSchema` tests 15.8
-- Add `setSchema` in VerifiableCredential and test from impl spec
-- Add `validateSchema` in VerifiableCredential and test from impl spec
-- Update `verifyCredential` to check for valid schema and test from impl spec
-- Update `VerifiableCredential`'s verify method
-- Update `verifyPresentation` to check for valid schema and test from impl spec
-- Update `VerifiablePresentation`'s verify method and test from impl spec 
+- Add `setSchema` in VerifiableCredential and test 16 from impl spec
+- Add `validateSchema` in VerifiableCredential and test 17 from impl spec
+- Update `verifyCredential` to check for valid schema and test 18 from impl spec
+- Update `VerifiableCredential`'s verify method and test 19.
+- Update `verifyPresentation` to check for valid schema and test 18 from impl spec
+- Update `VerifiablePresentation`'s verify method and test 19 from impl spec 
 - Add example script for blob module showing put and get
 - Add example script for schema module's builder pattern and then reading and writing the schema on chain
 - Add example script for showing schema validation.
