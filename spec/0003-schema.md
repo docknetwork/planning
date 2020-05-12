@@ -19,19 +19,20 @@ Constants
 /// Size of the blob id in bytes
 pub const ID_BYTE_SIZE: usize = 32;
 /// Maximum size of the blob in bytes
- // implementer may choose to implement this as a dynamic config option settable with the `parameter_type!` macro
+// implementer may choose to implement this as a dynamic config option settable with the
+// `parameter_type!` macro. In that case the name MaxBlobSize is suggested.
 pub const BLOB_MAX_BYTE_SIZE: usize = 1024;
 
 /// The type of the blob id
-pub type Id = [u8; ID_BYTE_SIZE];
+pub type BlobId = [u8; ID_BYTE_SIZE];
 ```
 
 Storage
 ```rust
 /// For each blob id, its author's DID and the blob is stored in the map
 decl_storage! {
-    trait Store for Module<T: Trait> as BlobModule {
-        Blobs get(id): map dock::blob::Id => Option<(dock::did::Did, Vec<u8>)>;
+    trait Store for Module<T: Trait> as Blob {
+        Blobs get(fn get_blob): map dock::blob::BlobId => Option<(dock::did::Did, Vec<u8>)>;
     }
 }
 ```
@@ -39,10 +40,9 @@ decl_storage! {
 Types
 ```rust
 /// When a new blob is being registered, the following object is sent
-/// When a blob is queried, the following object is returned.
 #[derive(Encode, Decode, Clone, PartialEq, Debug)]
 pub struct Blob {
-    id: dock::blob::Id,
+    id: dock::blob::BlobId,
     blob: Vec<u8>,
     author: dock::did::Did,
 }
@@ -94,7 +94,7 @@ pub enum StateChange {
 }
 ```
 
-Add `BlobModule` in `construct_runtime` in `lib.rs`
+Add `BlobStore` in `construct_runtime` in `lib.rs`
 ```rust
 pub enum Runtime where
 		....
@@ -103,7 +103,7 @@ pub enum Runtime where
     .....,
     DIDModule: did::{Module, Call, Storage, Event},
     ....,
-    BlobModule: blob::{Module, Call, Storage}
+    BlobStore: blob::{Module, Call, Storage}
 	}
 ```
 
