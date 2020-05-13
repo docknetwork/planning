@@ -1,5 +1,3 @@
-TODO: read https://www.w3.org/TR/2014/REC-rdf11-mt-20140225
-
 Authors: Andrew Dirksen
 
 ## Abstract
@@ -23,7 +21,7 @@ A derivation is "valid" if it is impossible for its premises to be true while it
 
 "Deductive reasoning" or "theorem proving" is the process of finding a derivation that proves a given theorem.
 
-This RFC proposes a "Derivation Validation Program" which checks whether a derivation is "valid", but does not check whether a derivation is "sound".
+A "derivation validator" is a program which checks whether a derivation is "valid", but does not check whether a derivation is "sound".
 
 ## Motivation
 
@@ -35,7 +33,7 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 
 ## Goals
 
-- Reduce necesary human interaction when acting on credentials.
+- Reduce necessary human interaction when acting on credentials.
 - Stacked Credentials
 - Developer outreach through open source implementation and engaging demos
 
@@ -55,10 +53,10 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 
 This RFC proposes the development of, or integration with, two programs (functions).
 
-1. Derivation validator
-2. Theorem prover which finds derivations for use as input to the derivation validator
+1. A derivation validator
+2. A theorem prover which finds derivations for use as input to the derivation validator
 
-This RFC also proposes use of the derivation validator in combination with a VCDM Verifier to verify (check the soundness of) composite claims. The VCDM Verifier verifies premises via ethos and the derivation validator validates derivations based on those premises.
+This RFC also proposes use of the derivation validator in combination with a VCDM Verifier to verify (check the soundness of) composite claims. The VCDM Verifier would verify premises via ethos and the derivation validator would validates derivations based on those premises.
 
 ## Deferred Decisions
 
@@ -66,15 +64,15 @@ This RFC also proposes use of the derivation validator in combination with a VCD
   - Useful to be human readable
   - Useful to be embedable in a credential as "proof"
 - Choice of rule expression DSL
-- Language
-  - Should be usable from other languages if possible
-- Use of claim graph representaion for rules
-  - Allows both types of "premise" to be represented in the same claim graph.
-  - Allows Issuers to include "rules" within the credential.
-  - Downsides?
+  - Use of claim graph representaion for rules
+	- Allows both types of "premise" to be represented in the same claim graph.
+	- Allows Issuers to include "rules" within the credential.
+	- Downsides?
 - How can derivations refer to [blank nodes](https://en.wikipedia.org/wiki/Blank_node)?
   - Without a way to uniquely specify blank nodes, a verifier would sometimes need to determine a shuffling of blank nodes that allows the derivation to be valid. That "find a shuffling" problem is computationaly difficult (https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem).
 - For storage and computaional efficiency, multiple theorems may be proved by a single "batch" derivation.
+- Language
+  - Should be usable from other languages if possible. Rust is a likely candidate.
 
 ## Other Considerations
 
@@ -86,9 +84,7 @@ As an alternative approach each composite claim could be described and shared as
 
 ### Express rules as [ShEx](https://shex.io/shex-primer/index.html)
 
-TODO
-
-*Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
+It's expected that rules described as ShEx would not be flexible enough to allow theorem provers to find "creative" derivations. More research is required.
 
 ## Open Questions
 
@@ -122,9 +118,3 @@ Should ethical (ethos) arguments be expressed as implication relationships like 
 ```
 
 This may be a question best posed during implementation, when limitaions are better understood.
-
----
-
-*Final Checklist*
-
-- *Would your RFC benefit from some last-minute visuals?*
