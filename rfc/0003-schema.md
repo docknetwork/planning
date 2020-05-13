@@ -86,7 +86,7 @@ will format the received information as follows:
 ```json
 {
    // Note that the value of id key is same as the value of `id` in the `credentialSchema` field of the credential below.
-   "id": "schema:dock:5C78GCA......",
+   "id": "blob:dock:5C78GCA......",
    "name": "AlumniCredSchema",
    "version": "1.0.0",
    "author": "did:dock:5CEdyZkZnALDdCAp7crTRiaCq6KViprTM6kHUQCD8X6VqGPW",
@@ -115,7 +115,7 @@ The above schema states that there will be 2 properties called `emailAddress` wh
 The schema in a credential will be specified as
 ```json
 "credentialSchema": {
-  "id": "schema:dock:5C78GCA......",
+  "id": "blob:dock:5C78GCA......",
   "type": "JsonSchemaValidator2018"
 }
 ```
@@ -134,7 +134,7 @@ The resulting credential will look like this
    ],
    "issuanceDate": "2020-03-18T19:23:24Z",
    "credentialSchema": {    // this is the schema
-      "id": "schema:dock:5C78GCA......",
+      "id": "blob:dock:5C78GCA......",
       "type": "JsonSchemaValidator2018"
    },
    "credentialSubject": {
@@ -266,7 +266,7 @@ The schema extrinsic allows a large blob of data to be sent to the node. Current
 JSON-schema supports schema references with `$ref` attribute but the W3C spec [Verifiable Credentials JSON Schema Specification](https://w3c-ccg.github.io/vc-json-schemas/) does not specify them yet. We can however support them in the future where the `$ref` key's value will be the Dock schema id (prepended with `/` to indicate root) and the SDK will have to recursively scan the credential schema to find all the dependency schemas and then scan each of those schemas for more dependencies. Once all schemas have been discovered, add them to the schema validator (using `addSchema` if using `jsonschema`). Eg, consider the following case where the address schema is referenced in the person schema which is referenced in the `manSchema` schema
 ```js
 const addressSchema = {
-  "id": "/schema:dock:address", // the schema id
+  "id": "/blob:dock:address", // the schema id
   "type": "object",
   "properties": {
     "lines": {
@@ -281,38 +281,38 @@ const addressSchema = {
 }
 
 const personSchema = {
-  "id": "/schema:dock:person",
+  "id": "/blob:dock:person",
   "type": "object",
   "properties": {
     "name": {"type": "string"},
-    "address": {"$ref": "/schema:dock:address"}, // notice the address schema id being referenced
+    "address": {"$ref": "/blob:dock:address"}, // notice the address schema id being referenced
     "votes": {"type": "integer", "minimum": 1}
   }
 
 const manSchema = {
-    "id": "/schema:dock:man",
+    "id": "/blob:dock:man",
     "type": "object",
     "properties": {
-      "type": {"$ref": "/schema:dock:person"},
+      "type": {"$ref": "/blob:dock:person"},
       "gender": {"type": "string"}
       },
       "votes": {"type": "integer", "minimum": 1}
     }
 };
 ```
-When the scanner is run over `personSchema`, the referenced schema `schema:dock:address` is returned.
+When the scanner is run over `personSchema`, the referenced schema `blob:dock:address` is returned.
 ```js
 import {scan} from 'jsonschema/lib/scan';
 const s1 = scan('/', personSchema);
 console.log(s1.ref);
-> ref: { '/schema:dock:address': 0 }
+> ref: { '/blob:dock:address': 0 }
 
 const s2 = scan('/', manSchema);
 console.log(s2.ref);
-> ref: { '/schema:dock:person': 0 }
+> ref: { '/blob:dock:person': 0 }
 ```
 `s1.ref` is a map of referenced schemas with the key contains the schema id (with leading `/`).  
-When the scanner is run over `manSchema`, the referenced schema `schema:dock:person` is returned but the schema `addressSchema` referenced by `personSchema` is not returned. Hence the recursive application of `scan` to the references.  
+When the scanner is run over `manSchema`, the referenced schema `blob:dock:person` is returned but the schema `addressSchema` referenced by `personSchema` is not returned. Hence the recursive application of `scan` to the references.  
 An alternate is using `unresolvedRefs` as shown [here](https://github.com/tdegrunt/jsonschema#dereferencing-schemas).  
 
 ## Other Considerations
