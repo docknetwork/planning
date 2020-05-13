@@ -133,7 +133,7 @@ A new module for blob in `src/modules`
 class BlobModule {
   constructor(api) {
     this.api = api;
-    this.module = api.tx.blobModule;
+    this.module = api.tx.blobStore;
   }
   
   /**
@@ -164,7 +164,7 @@ class Schema {
 
   // Add the JSON schema to this object after checking that `jsonSchema` is a valid JSON schema.
   // Check if JSON is valid.
-  setJSONSchema(jsonSchema) {
+  async setJSONSchema(jsonSchema) {
   }
 
   // Update the object with `author` key. Repeatedly calling it will keep resetting the author
@@ -194,7 +194,7 @@ class Schema {
   }
 
   // Check that the given JSON schema is compliant with JSON schema spec mentioned in RFC
-  static function validateSchema(json) {
+  static async validateSchema(json) {
   }
 
   /**
@@ -203,7 +203,7 @@ class Schema {
     The returned schema would be formatted as specified in the RFC (including author DID, schema id) or an error is 
     returned if schema is not found on the chain or in JSON format.
   */
-  async static function getSchema(id, dockApi) {
+  static async getSchema(id, dockApi) {
   }
 }
 ```
