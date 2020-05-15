@@ -44,8 +44,9 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 
 ## Expected Outcomes
 
-- Derivation format, potentially usable as a "proof" in verifiable credentials
-- Groundwork for new w3c VCDM "proof" type e.g. "DeductiveDerivation2020"
+- Derivation format, potentially usable as a vcdm:proof or dock:logic (custom property) in verifiable presentations
+- Groundwork for new w3c vcdm:VerifiablePresentaion specialization type e.g. dock:DeductivePresentaion2020
+  - Note: Within this project "Derivation" already has a concrete meaning. Calling a dock:DeductivePresentaion2020 a derivation would be accurate, but confusing. "Deductive Presentation" should be used instead.
 - Better understanding of the problem space
 - Street cred
 
@@ -62,7 +63,6 @@ This RFC also proposes use of the derivation validator in combination with a VCD
 
 - Choice of derivation format
   - Useful to be human readable
-  - Useful to be embedable in a credential as "proof"
 - Choice of rule expression DSL
   - Use of claim graph representaion for rules
 	- Allows both types of "premise" to be represented in the same claim graph.
@@ -72,7 +72,7 @@ This RFC also proposes use of the derivation validator in combination with a VCD
   - Without a way to uniquely specify blank nodes, a verifier would sometimes need to determine a shuffling of blank nodes that allows the derivation to be valid. That "find a shuffling" problem is computationaly difficult (https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem).
 - For storage and computaional efficiency, multiple theorems may be proved by a single "batch" derivation.
 - Language
-  - Should be usable from other languages if possible. Rust is a likely candidate.
+  - The derivation validator and theorem prover should be usable from other languages if possible. Rust is a likely candidate.
 
 ## Other Considerations
 
@@ -88,7 +88,7 @@ It's expected that rules described as ShEx would not be flexible enough to allow
 
 ## Open Questions
 
-### How to represent logical rules.
+### How to represent logical rules
 
 SPARQL? OWL? Regular expressions applied to the claim graph?
 
