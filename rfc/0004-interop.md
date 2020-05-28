@@ -27,16 +27,16 @@ A non-opinionated pipe to enable a communication channel between two web applica
 
 ## Motivation
 
-Dock is providing tools for a standards-based ecosystem, proving interoperability is required to show standards compliance. It also helps showing potential users that chosing Dock is a more future-proof and enabling option than using vendors that use proprietary solutions.
+Dock is providing tools for a standards-based ecosystem, proving interoperability is required to show standards compliance. It also helps showing potential users that chosing Dock is a more future-proof and enabling option than using vendors implementing proprietary solutions.
 
 ## Previous Work
 
-*What previous efforts, if any, have been made to solve these problems?*
-*Any other related efforts?*
+_Please refer to the [suggested reading section](#suggested-reading)._
 
 ## Goals
 
-*Bulleted list suggested.*
+1. Prove interoperability with CHAPI by making public three demo web applications showing the Issuer, Wallet and Verifier use cases.
+
 
 ## Non-Goals
 
