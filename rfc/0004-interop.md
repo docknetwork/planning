@@ -1,26 +1,33 @@
-*This document is a written proposal of some future effort.*
-
-*The italicized items should be deleted or commented out before submission.*
-
-*If a section has no content, simply write "None", "Unspecified" or "NA".*
-
-Authors: *Name One, Name Two*
+Authors: Fausto Woelflin
 
 ## Abstract
+Proving interoperability with other players in the space is key to survive and thrive in a standards-based ecosystem like the Verifiable Credentials one. This RFC explores the interop initiatives CHAPI and DIDCOMM, and the steps that would allow Dock to prove compliance to them.
 
 ## Suggested Reading
-
-*Bulleted list suggested.*
-
-*If a team member would require additional technical information before reading the rest of this document, link to that information from this section. Each item listed here adds to the total reading time for this document.*
+- [Refined Roadmap Doc](https://www.notion.so/dockteam/Refined-Roadmap-2020-04-92673bd7155447b2a4ab109b813c079a)
+  - [Interop Proposal](https://www.notion.so/dockteam/Interop-ec6566afb9b440778779ae5fabac2e41)
+- [DHS S&T Silicon Valley Innovation Program (SVIP) proposal on interoperability](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view)
+- [Plugfest 2020 - Test suite](https://github.com/w3c-ccg/vc-examples/tree/master/plugfest-2020)
+  - [Demo issuer](https://github.com/digitalbazaar/chapi-demo-issuer)
+  - [Demo wallet](https://github.com/digitalbazaar/chapi-demo-wallet)
+  - [Demo verifier](https://github.com/digitalbazaar/chapi-demo-verifier)
+- [IIW Session Notes](https://iiw.idcommons.net/IIW_30_Session_Notes)
+- [CHAPI: Credential Handler API](https://w3c-ccg.github.io/credential-handler-api/)
+- [DIDCOMM RFC](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0005-didcomm/README.md)
+- []()
+- []()
 
 ## Background
+###CHAPI
 
-*Write an introduction to the topic if helpful.*
+A non-opinionated pipe to enable a communication channel between two web applications running on the same user agent (without the data leaving the local machine to do so).
+
+###DIDCOMM
+(stands for DID-aware communication) is any communication that relies on DIDs as identifiers. DIDCOMM is a standard way to exchange DID-aware encrypted messages, regardless of transport.
 
 ## Motivation
 
-*What technical problems does this RFC aim to solve?*
+Dock is providing tools for a standards-based ecosystem, proving interoperability is required to show standards compliance. It also helps showing potential users that chosing Dock is a more future-proof and enabling option than using vendors that use proprietary solutions.
 
 ## Previous Work
 
@@ -55,8 +62,10 @@ Authors: *Name One, Name Two*
 *Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
 
 ## Open Questions
+- Are we planning to submit 
+- Should the resulting Web apps (Issuer/Wallet/Verifier) complement/replace the previously-planned demo app? (Which at the time of writing this doc only has support for verification of credentials, but was planned to support issuing too)
+- Do we _need_ too implement all three (Issuer/Wallet/Verifier) in order
 
-*Use this section to invite specific feedback from reviewers.*
 
 ---
 
