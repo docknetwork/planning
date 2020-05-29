@@ -14,7 +14,10 @@ Proving interoperability with other players in the space is key to survive and t
 - [IIW Session Notes](https://iiw.idcommons.net/IIW_30_Session_Notes)
 - [CHAPI: Credential Handler API](https://w3c-ccg.github.io/credential-handler-api/)
 - [DIDCOMM RFC](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0005-didcomm/README.md)
-- [DID Auth](https://github.com/w3c-ccg/vc-examples/blob/9c2185144d67ebf0441aeacb7398c45667ef3fa2/docs/chapi-http-edu/README.md)
+- [DID Auth whitepaper](https://github.com/WebOfTrustInfo/rwot6-santabarbara/blob/master/final-documents/did-auth.pdf)
+  - [Video](https://www.youtube.com/watch?v=Yq8yFYdCnxU)
+
+
 
 ## Background
 
@@ -89,19 +92,16 @@ The subjects of CHAPI and DIDCOMM appear above as the two possible options to pa
 
 Remember, CHAPI and DIDCOMM are suggested as _"means to achieve **some** of the interop goals for the different applications"_, not as goals by themselves. Implementing both may help in some way but in no place of the [DHS doc](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view) is it suggested to do so, probably because it'd be an overkill. This detail suggests the need to somehow answer the following question: *which of the two should we choose?*
 
-To answer that question we can analyse several factors, the ones proposed here are:
-1. Required workload
-1. Current value
-1. Future value
+As per [CHAPI's specs](https://w3c-ccg.github.io/credential-handler-api/#model) Credential handlers are implemented as Service Workers. The notion of service workers is more applicable to an application than to an SDK (which is what we currently have). DIDComm on the other hand, seems to be a specific way of wrapping messages, which can definitely be implemented as SDK functionality (maybe as a wrapper over [existing toos](https://github.com/decentralized-identity/DIDComm-js)). This distinction seems to favor DIDComm over CHAPI, although the question remains whether we *want* to add that functionality to our SDK.
 
-### Required workload
-Passing all the 
+Another factor to take into account is that the three demo applications (Issuer/Wallet/Verifier) need to be built in any case, and a probably good option is to use the existing ones from Transmute or Digital Bazaar as example. All of them seem to be very similar, which suggests that they may just be forks of each other and share most of the code, except for the addition of a specific vendor. If after deeper study this remains being the case, it may be wise to follow the trend and use whatever these examples repos are using which would a) ensure we'll end up proving interop with them, and b) probably save a good amount of effort/time/money.
 
+Careful analysis of these repos should be done before writing the Spec, the final choice may just depend on that. At the end of the day neither option seem to add significant value to our set of tools beside proving interoperability, so we should probably go with the cheaper alternative.
 
  
 ## Deferred Decisions
 
-*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed decisions.*
+- CHAPI vs DIDComm choice.
 
 ## Other Considerations
 
@@ -109,9 +109,11 @@ Passing all the
 
 ## Open Questions
 - Should the resulting Web apps (Issuer/Wallet/Verifier) complement/replace the previously-planned demo app? (Which at the time of writing this doc only has support for verification of credentials, but was planned to support issuing too)
-- Do we _need_ to implement all three (Issuer/Wallet/Verifier) in order to prove interoperability?
+- Do we *_need_* to implement all three (Issuer/Wallet/Verifier) in order to prove interoperability?
 - Do we want to take the demos one step further and show a bit more of our solutions? For example instead of hardcoding a demo credential to be issued every time, we could allow the user to manufacture one with our SDK. We could also take the chance to show other features like DID creation or Schemas.
 - How do our schema-enabled VCs work in third party verifiers?
+- (I haven't checked the demo repos in deep detail, so the answer may be there already) How will we implement DIDauth ourselves?
+- Are there other (better) ways out there to reach the same interop goal?
 
 ---
 
