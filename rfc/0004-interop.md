@@ -14,8 +14,7 @@ Proving interoperability with other players in the space is key to survive and t
 - [IIW Session Notes](https://iiw.idcommons.net/IIW_30_Session_Notes)
 - [CHAPI: Credential Handler API](https://w3c-ccg.github.io/credential-handler-api/)
 - [DIDCOMM RFC](https://github.com/hyperledger/aries-rfcs/blob/master/concepts/0005-didcomm/README.md)
-- []()
-- []()
+- [DID Auth](https://github.com/w3c-ccg/vc-examples/blob/9c2185144d67ebf0441aeacb7398c45667ef3fa2/docs/chapi-http-edu/README.md)
 
 ## Background
 
@@ -41,16 +40,15 @@ To the best of our knowledge, at the time of writing of this document:
 
 ## Expected Outcomes
 
-*Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
+1. A live hosted Issuer web application (with a link to its open source code on Github)
+1. A live hosted Wallet web application (with a link to its open source code on Github)
+1. A live hosted Verifier web application (with a link to its open source code on Github). This may or may not be an extension of our current verifier.
 
-1. Prove interoperability by making sure we pass each step in the [Unified Interoperability Test Plan](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view). For the most part, 
-passing all tests in the [Credential Handler API (CHAPI) Test Plan](https://github.com/w3c-ccg/vc-examples/tree/master/plugfest-2020) should be enough.
-  1. This probably requires developing, hosting and open sourcing three demo web applications showing the Issuer, Wallet and Verifier use cases in action.
 
 ## RFC
 *Main body. Make the plan descriptive enough to encourage productive suggestions.*
 
-The main goal of this effort is to show some degree of interoperability with other players in the space. To that end, the Unified Interoperability Test Plan (section 2 in [this document](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view)) suggest a series of goals to meet, and a series of tests for Issuer-, Wallet- and Verifier applications to pass. The following is a summary of those:
+The main goal of this effort is to show some degree of interoperability with other players in the space. To that end, the Unified Interoperability Test Plan (section 2 in the [DHS doc](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view)) suggest a series of goals to meet, and a series of tests for Issuer-, Wallet- and Verifier applications to pass. The following is a summary of those:
 ### Goals for Wallet Applications
 1. [x] Support for the Verifiable Credentials data model.
 1. [ ] Support create and read operations for at least two different DID methods
@@ -80,18 +78,24 @@ subject DID.
 1. [ ] [Verifiable Credential HTTP API Test Plan](https://github.com/w3c-ccg/vc-examples/tree/feat/test-suite/test-suite): automated suite designed to test end-to-end conformance to the Verifiable Credential data model standard and the HTTP API pre-standards between Issuer and Verifier products. TODO: mention that we have most of these, only miss issuer/verifier APIs
 1. [ ] [Credential Handler API (CHAPI) Test Plan](https://github.com/w3c-ccg/vc-examples/tree/master/plugfest-2020): manual test suite designed to test end-to-end conformance to the Credential Handler API pre-standard between the Issuer, Wallet, and Verifier products.
 
-These tests seem to test similar things with regards to interoperability: comp
 ___
 
-Goals/tests marked with a checkmark [x] above are believed to be done with from previous work, or that they will not require additional work from our side to pass them. Readers are encouraged to find discrepancies.
+Goals/tests marked with a checkmark [x] above are believed to be done with from our earlier work, or that they will not require additional work from our side to pass them. Readers are encouraged to find discrepancies.
 
 The subjects of CHAPI and DIDCOMM appear above as the two possible options to pass some of the goals. Research was done to understand them and how they could help us reach that goal. This new understanding allows for a wildly simplistic summary of the concepts, hoping to quickly bring readers up to speed for discussion:
 
 - **CHAPI**: A non-opinionated pipe to enable a communication channel between two web applications running on the same user agent (without the data leaving the local machine to do so), explicitely needing some user interaction for security reasons.
 - **DIDCOMM**: comes from _DID communication_, is any communication that relies on DIDs as identifiers. DIDCOMM can be seen as a standard way to exchange DID-aware encrypted messages, regardless of transport, between agents and agent-like things. 
 
+Remember, CHAPI and DIDCOMM are suggested as _"means to achieve **some** of the interop goals for the different applications"_, not as goals by themselves. Implementing both may help in some way but in no place of the [DHS doc](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view) is it suggested to do so, probably because it'd be an overkill. This detail suggests the need to somehow answer the following question: *which of the two should we choose?*
 
-TODO ADD DISCUSSION CHAPI VS DIDCOMM AND FINAL DECISION
+To answer that question we can analyse several factors, the ones proposed here are:
+1. Required workload
+1. Current value
+1. Future value
+
+### Required workload
+Passing all the 
 
 
  
