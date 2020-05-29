@@ -124,7 +124,7 @@ struct Triple<T> {
 
 It's not decided exactly how the rule descriptions will be serialized, but they are expressable in this datalog-ish syntax:
 
-```datalog
+```
 // For conciseness I'll use <#something> as shorthand for <http://example.com/something>.
 
 // Forall a, b: if b is a parent of a then b is an ancestor of a
@@ -136,7 +136,7 @@ It's not decided exactly how the rule descriptions will be serialized, but they 
 
 More rule examples:
 
-```datalog
+```
 // forall a, b: if (a parent b) then (b child a)
 (?b <#child> ?a) -> (?a <#parent> ?b)
 
