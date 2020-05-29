@@ -21,7 +21,7 @@ Proving interoperability with other players in the space is key to survive and t
 
 ## Background
 
-TODO: We're pretty sure we're compliant, but showing it in a standarised way will be worth a lot
+To the best of our knowledge, our tools should be 100% compatible with the ones from other vendors. This RFX explores ways of empirically proving third parties that this is the case.
 
 ## Motivation
 
