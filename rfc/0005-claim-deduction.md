@@ -103,6 +103,63 @@ function verify_deductive_presentation(vcdm_presentation) {
 }
 ```
 
+### Logical Rule Example
+
+A logical conjuctive rules may be expressed like so:
+
+```rust
+struct Rule {
+    if_all: Vec<Triple<usize>>,
+    instantiation: BTreeMap<usize, Iri>,
+    then: Vec<Triple<usize>>,
+}
+
+/// an RDF triple
+struct Triple<T> {
+    subject: T,
+    predicate: T,
+    object: T,
+}
+```
+
+It's not decided exactly how the rule descriptions will be serialized, but they are expressable in this datalog-ish syntax:
+
+```datalog
+// For conciseness I'll use <#something> as shorthand for <http://example.com/something>.
+
+// Forall a, b: if b is a parent of a then b is an ancestor of a
+(?a <#parent> ?b) -> (?a <#ancestor> ?b) 
+
+// forall a, b, c: if (a ancestor b) and (b ancestor c) then (a ancestor c)
+(?a <#ancestor> ?b) ∧ (?b <#ancestor> ?c) -> (?a <#ancestor> ?c)
+```
+
+More rule examples:
+
+```datalog
+// forall a, b: if (a parent b) then (b child a)
+(?b <#child> ?a) -> (?a <#parent> ?b)
+
+// forall a, b: if (a child b) then (b parent a)
+(?b <#parent> ?a) -> (?a <#child> ?b)
+
+// Multiple statements can be implied in the same rule. It's left as an exercise to the reader to interpret this statement.
+(?a <#mother> ?m) ∧ (?a <#father> ?f) -> (?m <#parentWith> ?f) ∧ (?f <#parentWith> ?m)
+
+// Predicates can also be free values
+(?a ?p ?b) ∧ (?p <#sameMeaning> ?q) -> (?a ?q ?b)
+```
+
+For reasoner performance. There will likely be a restriction that every implied claim must contain no unbound items that are not on the other side of the rule.
+
+```
+// This is not allowed
+(<#alice> <#bob> <#charlie>) -> (<#alice> <#charlie> ?a)
+
+// But this is allowed
+(<#alice> <#bob> <#charlie>) -> (<#alice> <#charlie> <#bob>)
+```
+
 ## Deferred Decisions
 
 - Choice of derivation format
