@@ -21,7 +21,7 @@ Proving interoperability with other players in the space is key to survive and t
 
 ## Background
 
-To the best of our knowledge, our tools should be 100% compatible with the ones from other vendors. This RFX explores ways of empirically proving third parties that this is the case.
+To the best of our knowledge, our tools should be 100% compatible with the ones from other vendors. This RFC explores ways of empirically proving third parties that this is the case.
 
 ## Motivation
 
@@ -37,20 +37,15 @@ _Please refer to the [suggested reading section](#suggested-reading)._
 1. Appear listed as one of the interop-enabled options, [here](https://w3c-ccg.github.io/vc-examples/plugfest-2020.html) or wherever it makes the most sense for us to be discovered.
 
 ## Non-Goals
-To the best of our knowledge, at the time of writing of this document:
-- Deliverables will not include changes to our SDK code.
-- Deliverables will not include changes to our Node code.
+To the best of our knowledge, at the time of writing of this document, deliverables will not include changes to our SDK code, nor to our Node code.
 
 ## Expected Outcomes
-
 1. A live hosted Issuer web application (with a link to its open source code on Github)
 1. A live hosted Wallet web application (with a link to its open source code on Github)
 1. A live hosted Verifier web application (with a link to its open source code on Github). This may or may not be an extension of our current verifier.
 
 
 ## RFC
-*Main body. Make the plan descriptive enough to encourage productive suggestions.*
-
 The main goal of this effort is to show some degree of interoperability with other players in the space. To that end, the Unified Interoperability Test Plan (section 2 in the [DHS doc](https://drive.google.com/file/d/1XvwGzYYy7ZrdElmz4_zj3qVBXRH8DydO/view)) suggest a series of goals to meet, and a series of tests for Issuer-, Wallet- and Verifier applications to pass. The following is a summary of those:
 ### Goals for Wallet Applications
 1. [x] Support for the Verifiable Credentials data model.
@@ -96,12 +91,12 @@ As per [CHAPI's specs](https://w3c-ccg.github.io/credential-handler-api/#model) 
 
 Another factor to take into account is that the three demo applications (Issuer/Wallet/Verifier) need to be built in any case, and a probably good option is to use the existing ones from Transmute or Digital Bazaar as example. All of them seem to be very similar, which suggests that they may just be forks of each other and share most of the code except for the addition of a specific vendor. If after deeper study this remains being the case, it may be wise to follow the trend and use what these example repos are using ([CHAPI in this case](https://github.com/digitalbazaar/chapi-demo-issuer)) which would a) ensure we'll end up proving interop with them, and b) probably save a good amount of effort/time/money by reusing a lot of their code.
 
-Careful analysis of these repos should be done before writing the Spec, the final choice may just depend on that. At the end of the day neither option seem to add significant value to our set of tools beside proving interoperability, so we should probably go with the cheaper alternative.
+Careful analysis of these repos should be done before writing the Spec, the final choice may just depend on that. At the end of the day neither option seem to add significant value to Dock's set of tools beside proving interoperability, so we should probably go with the cheaper alternative.
 
  
 ## Deferred Decisions
 
-- CHAPI vs DIDComm choice.
+- (for now) CHAPI vs DIDComm choice. Will probably answer this before creating the PR. TODO: solve this!
 
 ## Other Considerations
 
