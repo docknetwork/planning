@@ -57,7 +57,51 @@ This RFC proposes the development of, or integration with, two programs (functio
 1. A derivation validator
 2. A theorem prover which finds derivations for use as input to the derivation validator
 
-This RFC also proposes use of the derivation validator in combination with a VCDM Verifier to verify (check the soundness of) composite claims. The VCDM Verifier would verify premises via ethos and the derivation validator would validates derivations based on those premises.
+This RFC also proposes use of the derivation validator in combination with a VCDM Verifier to verify (check the soundness of) composite claims. The VCDM Verifier would verify VCDM credential and the derivation validator would validate derivations based on the premises extracted from those credentials.
+
+### Example function signatures (psuedocode)
+
+This section is non-normative. It's provided as a concrete example of what the api for this feature *may* look like.
+
+Derivation validator:
+
+```rust
+fn validate(premises: RdfStore, derivation: &Proof) -> Result<Vec<ConcreteClaim>, InvalidProof>;
+```
+
+Theorem prover:
+
+```rust
+// naive thoerem prover
+fn prove(premises: RdfStore, rules: &LogicalRules, composite_claims: &[Claim], limits: &Limits) -> Result<Proof, CantProve>;
+
+// or
+
+// theorem prover with rules embedded within the claim graph
+fn prove(premises: RdfStore, composite_claims: &[Claim], limits: &Limits) -> Result<Proof, CantProve>;
+
+// `Limits` are a way to bound memory consumption and cpu time when proving a thoerem. If the limits are exceeded an error is returned.
+```
+
+Use with VCDM presentations:
+
+```js
+// potential way to combine proof validation with credential verification
+function verify_deductive_presentation(vcdm_presentation) {
+    let verified_claims = ...; // verify and get the union of all credentials within the presentation
+    let issuers = ...; // get every verified issuer in presentaion's credetials
+    let composite_claims = [];
+    for (proof of vcdm_presentation.get_prop("https://dock.io/rdf/logic")) {
+        // the js wrapper around validate would throw and error on InvalidProof
+        let new_claims = validate(verified_claims, proof);
+        composite_claims.append(new_claims);
+    }
+    return {
+        if_you_trust_all: issuers,
+        then: composite_claims, // could also be `then: verified_claims + composite_claims`
+	};
+}
+```
 
 ## Deferred Decisions
 
