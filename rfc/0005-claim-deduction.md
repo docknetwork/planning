@@ -2,7 +2,7 @@ Authors: Andrew Dirksen
 
 ## Abstract
 
-This RFC describes a system for deducing new "composite" claims from sets verifiable credentials. Specifically, this RFC describes a system for deducing composite claims from RDF claim graphs. This document also proposes use of a deductive reasoning system to automatically generate machine verifiable formal proofs of such claims.
+This RFC describes a system for deducing new "composite" claims from sets of verifiable credentials. Specifically, this RFC describes a system for deducing composite claims from RDF claim graphs. This document also proposes use of a deductive reasoning system to automatically generate machine verifiable formal proofs of such claims.
 
 ## Suggested Reading
 
@@ -45,7 +45,7 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 ## Expected Outcomes
 
 - Derivation format, potentially usable as a vcdm:proof or dock:logic (custom property) in verifiable presentations
-- Groundwork for new w3c vcdm:VerifiablePresentaion specialization type e.g. dock:DeductivePresentaion2020
+- Groundwork for new w3c vcdm:VerifiablePresentaion specialization type e.g. dock:DeductivePresentation2020
   - Note: Within this project "Derivation" already has a concrete meaning. Calling a dock:DeductivePresentaion2020 a derivation would be accurate, but confusing. "Deductive Presentation" should be used instead.
 - Better understanding of the problem space
 - Street cred
