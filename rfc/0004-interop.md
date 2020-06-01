@@ -73,7 +73,7 @@ subject DID.
 1. [ ] Support the Verifiable Credential Verifier HTTP API
 
 ### Tests to pass
-1. [ ] [Verifiable Credential HTTP API Test Plan](https://github.com/w3c-ccg/vc-examples/tree/feat/test-suite/test-suite): automated suite designed to test end-to-end conformance to the Verifiable Credential data model standard and the HTTP API pre-standards between Issuer and Verifier products. TODO: mention that we have most of these, only miss issuer/verifier APIs
+1. [ ] [Verifiable Credential HTTP API Test Plan](https://github.com/w3c-ccg/vc-examples/tree/feat/test-suite/test-suite): automated suite designed to test end-to-end conformance to the Verifiable Credential data model standard and the HTTP API pre-standards between Issuer and Verifier products. 
 1. [ ] [Credential Handler API (CHAPI) Test Plan](https://github.com/w3c-ccg/vc-examples/tree/master/plugfest-2020): manual test suite designed to test end-to-end conformance to the Credential Handler API pre-standard between the Issuer, Wallet, and Verifier products.
 
 ___
@@ -184,24 +184,33 @@ Here's an example of how a wallet UI can handle a credential store event:
     .then(handleStoreEvent);
 ```
 
+#### Issuer & Verifier examples
+These felt like an overkill but can be provided if the readers find them useful.
+
+
+### Sample stories
+The involved work may include, but not be limited to, the following tasks:
+- Develop a sample Issuer API (according to the [VC Issuer HTTP API specs](https://github.com/w3c-ccg/vc-issuer-http-api))
+- Develop a sample Verifier API (according to the [VC Verifier HTTP API specs](https://github.com/w3c-ccg/vc-verifier-http-api))
+- Develop a sample, CHAPI-compliant, Issuer App
+- Develop a sample, CHAPI-compliant, Wallet App
+- Develop a sample, CHAPI-compliant, Verifier App
+- Make sure our sample APIs pass all the [plugfest2020 tests](https://github.com/w3c-ccg/vc-examples/blob/master/plugfest-2020/plugfest-2020.spec.js). This should probably also cover [the other ones mentioned by DHS](https://github.com/w3c-ccg/vc-examples/tree/feat/test-suite/test-suite) as well.
+- Create a [PR back to plugfest-2020](https://github.com/w3c-ccg/vc-examples/pulls) so they include us as an option and we show up in the [latest report](https://w3c-ccg.github.io/vc-examples/plugfest-2020.html).
+
  
 ## Deferred Decisions
-
+N/A
 
 ## Other Considerations
 
-*Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
+N/A
 
 ## Open Questions
 - Should the resulting Web apps (Issuer/Wallet/Verifier) complement/replace the previously-planned demo app? (Which at the time of writing this doc only has support for verification of credentials, but was planned to support issuing too)
 - Do we *_need_* to implement all three (Issuer/Wallet/Verifier) in order to prove interoperability?
 - Do we want to take the demos one step further and show a bit more of our solutions? For example instead of hardcoding a demo credential to be issued every time, we could allow the user to manufacture one with our SDK. We could also take the chance to show other features like DID creation or Schemas.
 - How do our schema-enabled VCs work in third party verifiers?
-- (I haven't checked the demo repos in deep detail, so the answer may be there already) How will we implement DIDauth ourselves?
+- How will we implement DIDauth ourselves?
 - Are there other (better) ways out there to reach the same interop goal?
 
----
-
-*Final Checklist*
-
-- *Would your RFC benefit from some last-minute visuals?*
