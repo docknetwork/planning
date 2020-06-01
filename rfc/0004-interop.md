@@ -97,6 +97,7 @@ Careful analysis of these repos should be done before writing the Spec, the fina
 All current research seems to point to the fact that implementing CHAPI examples are the cheaper alternative, so the following sections will show some examples of how this implementation can look like
 
 #### Wallet
+The following examples all use the [credential-handler-polyfill](https://github.com/digitalbazaar/credential-handler-polyfill) by Digital Bazaar.
 ##### Service worker
 Here's an example service worker script:
 ```javascript
