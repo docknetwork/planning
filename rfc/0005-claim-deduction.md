@@ -181,19 +181,21 @@ This RFC does not prescribe a method for bundling credentials with a derivation.
         "http://example.com/father": "did:example:bobette"
       },
       "...": "..."
-    },
-  {
-      "@context": "https://www.w3.org/2018/credentials/v1",
-      "issuer": "did:example:aristotle",
+    }
+  ],
+  "https://dock.io/rdf/logicalRules": {
       "@included": [
         {
           "Some ruleset representation": "goes here."
         }
       ],
-      "...": "..."
+      "proof": {
+        "type": ["LinkedDataProof", "RSASignature"],
+		"purpose": "attestation",
+		"verificationMethod": "did:example:aristotle#key-1",
+		"...": "..."
+	  }
     }
-  ],
-  "rules": ,
   "https://dock.io/rdf/logic": {
     "Some derivation representation": "goes here."
   },
@@ -203,6 +205,78 @@ This RFC does not prescribe a method for bundling credentials with a derivation.
   }
 }
 ```
+
+### Lifecycle Example - Proof of Ancestry
+
+Details of this example are not final. The example is provided as context for the reader.
+
+This example has two issuers IssuerA and IssuerB, both attest to ancestry. There is one verifier, VerifierA. This example does not embed rules in a credential, rather, VerifierA somehow makes the ruleset available in machine readable form.
+
+IssuerA attests:
+
+```
+(<did:example:bobertjr> <#parent> <did:example:bobert>)
+(<did:example:bobert> <#parent> <did:example:grandpabob>)
+```
+
+IssuerB attests:
+
+```
+// _:1 and _:2 are blank nodes
+(<did:example:did:example:grandpabob> <#ancestor> _:1)
+(_:1 <#parent> _:2)
+(_:2 <#fullName> "Napoleon Bonaparte")
+(_:2 <#birthDate> "1769-08-15")
+(_:2 <#encyclopediaEntry> <https://en.wikipedia.org/wiki/Napoleon>)
+(_:2 <#isWellKnown> _:2)
+```
+
+Both attestations take the form of verifiable credentails held by `did:example:bobertjr`.
+
+The ruleset accepted by VerifierA is as follows:
+
+```
+(?a <#parent> ?b) -> (?a <#ancestor> ?b) 
+(?a <#ancestor> ?b) ∧ (?b <#ancestor> ?c) -> (?a <#ancestor> ?c)
+(?a <#ancestor> ?b)
+  ∧ (?b <#encyclopediaEntry> ?c)
+  ∧ (?b <#isWellKnown> ?b)
+  -> (?a <#wellKnownAncestor> ?c)
+```
+
+`bobertjr` wishes to convince ValidatiorA that `bobertjr` has a famous ancestor Napoleon Bonaparte. In other words, `bobertjr` wishes to present the claim `(<did:example:bobertjr> <#wellKnownAncestor> <https://en.wikipedia.org/wiki/Napoleon>)`. To start, `bobertjr` combines the claims from IssuerA and the ones from IssuerB into a single graph called premises. Next he generates a proof of the desired claim using the ruleset defined by VerifierA:
+
+```rust
+let proof = prove(
+    premises,
+    ruleset,
+	[(<did:example:bobertjr>, <#wellKnownAncestor> <https://en.wikipedia.org/wiki/Napoleon>)]
+)?;
+```
+
+The human readable form of the proof may look something like this:
+
+```
+(bobertjr parent bobert)
+  therefore (bobertjr ancestor bobert) .
+(bobert parent grandpabob)
+  therefore (bobert ancestor grandpabob) .
+(bobertjr ancestor bobert) and (bobert ancestor grandpabob)
+  therefore (bobertjr ancestor grandpabob) .
+(grandpabob ancestor _:1) and (_:1 ancestor _:2)
+  therefore (grandpabob ancestor _:2) .
+(bobertjr ancestor grandpabob) and (grandpabob ancestor _:2)
+  therefore (bobertjr ancestor _:2) .
+(bobertjr ancestor _:2)
+  and (_:2 encyclopediaEntry https://en.wikipedia.org/wiki/Napoleon)
+  and (_:2 isWellKnown _:2)
+  therefore (bobertjr wellKnownAncestor https://en.wikipedia.org/wiki/Napoleon) .
+qed [
+  (bobertjr wellKnownAncestor https://en.wikipedia.org/wiki/Napoleon),
+]
+```
+
+Next `bobertjr` sends the credentials (likely as a signed verifiable presentaion), along with the proof of composite claim, to VerifierA. Now as long as VerifierA trusts IssuerA and IssuerB, VerifierA has all the info needed to check `bobertjr`s claim.
 
 ## Deferred Decisions
 
