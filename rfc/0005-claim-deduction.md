@@ -13,11 +13,11 @@ This RFC describes a system for deducing new "composite" claims from sets of ver
 
 The terms "derivation", "proof" and "argument" refer to [formal proofs](https://en.wikipedia.org/wiki/Formal_proof). "Derivation" will be used when possible.
 
-A composite claim, thoerem, or conclusion is the logical result of a derivation. "Theorem" will be used when possible.
+A composite claim, theorem, or conclusion is the logical result of a derivation. "Theorem" will be used when possible.
 
-Each valid derivation proves a logical if-then (implication) relationship between a set of premises and a thoerem. The derivations proposed in this RFC split premises into two types: claims (represented as RDF tuples) and "rules". The data model for representing "rules" is undecided.
+Each valid derivation proves a logical if-then (implication) relationship between a set of premises and a theorem. The derivations proposed in this RFC split premises into two types: claims (represented as RDF tuples) and "rules". The data model for representing "rules" is undecided.
 
-A derivation is "valid" if it is impossible for its premises to be true while its thoerem is false. An derivation is "sound" if it is valid and the premises are true. https://en.wikipedia.org/wiki/Deductive_reasoning#Validity_and_soundness
+A derivation is "valid" if it is impossible for its premises to be true while its theorem is false. An derivation is "sound" if it is valid and the premises are true. https://en.wikipedia.org/wiki/Deductive_reasoning#Validity_and_soundness
 
 "Deductive reasoning" or "theorem proving" is the process of finding a derivation that proves a given theorem.
 
@@ -25,11 +25,11 @@ A "derivation validator" is a program which checks whether a derivation is "vali
 
 ## Motivation
 
-Each VDCM credential attests some claim graph, but the exact claims expressed in the credential are not always what the verifier needs. In most cases, the verifier needs to peform additional processing of verified credentials before acting on them. The current state-of-the-art is to present verified credentials in some human readable form. It's the human's responsibility to reason about the credentials and possibly perform some action based on the conclusion. Removing the human from the process is assumed to be beneficial.
+Each VDCM credential attests some claim graph, but the exact claims expressed in the credential are not always what the verifier needs. In most cases, the verifier needs to perform additional processing of verified credentials before acting on them. The current state-of-the-art is to present verified credentials in some human readable form. It's the human's responsibility to reason about the credentials and possibly perform some action based on the conclusion. Removing the human from the process is assumed to be beneficial.
 
 ## Previous Work
 
-Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/attachments/stackable-credentials-awards-for-future.pdf) and [frequently](https://cte.ed.gov/initiatives/community-college-stackable-credentials) [discussed](https://www.credentialingexcellence.org/blog/implementing-a-stackable-strategy-a-discussion-with-nfwa-and-atd) but rarely in the context of the VCDM. Credential Deduction is a generalisation of credential stacking.
+Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/attachments/stackable-credentials-awards-for-future.pdf) and [frequently](https://cte.ed.gov/initiatives/community-college-stackable-credentials) [discussed](https://www.credentialingexcellence.org/blog/implementing-a-stackable-strategy-a-discussion-with-nfwa-and-atd) but rarely in the context of the VCDM. Credential Deduction is a generalization of credential stacking.
 
 ## Goals
 
@@ -45,7 +45,7 @@ Stacked Credentials are often [proposed](https://ccrc.tc.columbia.edu/media/k2/a
 ## Expected Outcomes
 
 - Derivation format, potentially usable as a vcdm:proof or dock:logic (custom property) in verifiable presentations
-- Groundwork for new w3c vcdm:VerifiablePresentaion specialization type e.g. dock:DeductivePresentation2020
+- Groundwork for new w3c vcdm:VerifiablePresentation specialization type e.g. dock:DeductivePresentation2020
   - Note: Within this project "Derivation" already has a concrete meaning. Calling a dock:DeductivePresentaion2020 a derivation would be accurate, but confusing. "Deductive Presentation" should be used instead.
 - Better understanding of the problem space
 - Street cred
@@ -72,7 +72,7 @@ fn validate(premises: RdfStore, derivation: &Proof) -> Result<Vec<ConcreteClaim>
 Theorem prover:
 
 ```rust
-// naive thoerem prover
+// naive theorem prover
 fn prove(premises: RdfStore, rules: &LogicalRules, composite_claims: &[Claim], limits: &Limits) -> Result<Proof, CantProve>;
 
 // or
@@ -80,7 +80,7 @@ fn prove(premises: RdfStore, rules: &LogicalRules, composite_claims: &[Claim], l
 // theorem prover with rules embedded within the claim graph
 fn prove(premises: RdfStore, composite_claims: &[Claim], limits: &Limits) -> Result<Proof, CantProve>;
 
-// `Limits` are a way to bound memory consumption and cpu time when proving a thoerem. If the limits are exceeded an error is returned.
+// `Limits` are a way to bound memory consumption and cpu time when proving a theorem. If the limits are exceeded an error is returned.
 ```
 
 Use with VCDM presentations:
@@ -89,7 +89,7 @@ Use with VCDM presentations:
 // potential way to combine proof validation with credential verification
 function verify_deductive_presentation(vcdm_presentation) {
     let verified_claims = ...; // verify and get the union of all credentials within the presentation
-    let issuers = ...; // get every verified issuer in presentaion's credetials
+    let issuers = ...; // get every verified issuer in presentaion's credentials
     let composite_claims = [];
     for (proof of vcdm_presentation.get_prop("https://dock.io/rdf/logic")) {
         // the js wrapper around validate would throw and error on InvalidProof
@@ -99,13 +99,13 @@ function verify_deductive_presentation(vcdm_presentation) {
     return {
         if_you_trust_all: issuers,
         then: composite_claims, // could also be `then: verified_claims + composite_claims`
-	};
+    };
 }
 ```
 
 ### Logical Rule Example
 
-A logical conjuctive rules may be expressed like so:
+A logical conjunctive rules may be expressed like so:
 
 ```rust
 struct Rule {
@@ -122,7 +122,7 @@ struct Triple<T> {
 }
 ```
 
-It's not decided exactly how the rule descriptions will be serialized, but they are expressable in this datalog-ish syntax:
+It's not decided exactly how the rule descriptions will be serialized, but they are expressible in this datalog-ish syntax:
 
 ```
 // For conciseness I'll use <#something> as shorthand for <http://example.com/something>.
@@ -160,7 +160,7 @@ For reasoner performance. There will likely be a restriction that every implied 
 (<#alice> <#bob> <#charlie>) -> (<#alice> <#charlie> <#bob>)
 ```
 
-### Potential Encoding Within a Verifiable Presentaition
+### Potential Encoding Within a Verifiable Presentation
 
 This RFC does not prescribe a method for bundling credentials with a derivation. The following is an example of how it might me done.
 
@@ -182,19 +182,20 @@ This RFC does not prescribe a method for bundling credentials with a derivation.
       },
       "...": "..."
     },
-    {
+  {
       "@context": "https://www.w3.org/2018/credentials/v1",
       "issuer": "did:example:aristotle",
       "@included": [
         {
-          "Some ruleset representaion": "goes here."
+          "Some ruleset representation": "goes here."
         }
       ],
       "...": "..."
     }
   ],
+  "rules": ,
   "https://dock.io/rdf/logic": {
-    "Some derivation representaion": "goes here."
+    "Some derivation representation": "goes here."
   },
   "proof": {
     "type": "RsaSignature2018",
@@ -208,23 +209,23 @@ This RFC does not prescribe a method for bundling credentials with a derivation.
 - Choice of derivation format
   - Useful to be human readable
 - Choice of rule expression DSL
-  - Use of claim graph representaion for rules
-	- Allows both types of "premise" to be represented in the same claim graph.
-	- Allows Issuers to include "rules" within the credential.
-	- Downsides?
+  - Use of claim graph representation for rules
+    - Allows both types of "premise" to be represented in the same claim graph.
+    - Allows Issuers to include "rules" within the credential.
+    - Downsides?
 - How can derivations refer to [blank nodes](https://en.wikipedia.org/wiki/Blank_node)?
-  - Without a way to uniquely specify blank nodes, a verifier would sometimes need to determine a shuffling of blank nodes that allows the derivation to be valid. That "find a shuffling" problem is computationaly difficult (https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem).
-- For storage and computaional efficiency, multiple theorems may be proved by a single "batch" derivation.
+  - Without a way to uniquely specify blank nodes, a verifier would sometimes need to determine a shuffling of blank nodes that allows the derivation to be valid. That "find a shuffling" problem is computationally difficult (https://en.wikipedia.org/wiki/Subgraph_isomorphism_problem).
+- For storage and computational efficiency, multiple theorems may be proved by a single "batch" derivation.
 - Language
   - The derivation validator and theorem prover should be usable from other languages if possible. Rust is a likely candidate.
 
 ## Other Considerations
 
-Some alternative aproaches were considered:
+Some alternative approaches were considered:
 
 ### Express rules in a turing complete language
 
-As an alternative approach each composite claim could be described and shared as a program of some turing complete language. The program would analyze a "premises" claim graph to determine whether the a composite claim is true. Claim deduction would be performed by running the stored progam. This would make soundness checking computationally hard. It's not known how theorem proving could fit into this model.
+As an alternative approach each composite claim could be described and shared as a program of some turing complete language. The program would analyze a "premises" claim graph to determine whether the a composite claim is true. Claim deduction would be performed by running the stored program. This would make soundness checking computationally hard. It's not known how theorem proving could fit into this model.
 
 ### Express rules as [ShEx](https://shex.io/shex-primer/index.html)
 
@@ -238,7 +239,7 @@ SPARQL? OWL? Regular expressions applied to the claim graph?
 
 ### What are some engaging example use-cases?
 
-### Expicit ethos
+### Explicit ethos
 
 Should ethical (ethos) arguments be expressed as implication relationships like "issuer-A is trustworthy -> claim1 ∧ claim2 ∧ ..."? An expanded form may look something like this:
 
@@ -261,4 +262,4 @@ Should ethical (ethos) arguments be expressed as implication relationships like 
 // derivations need to be prefixed with claim "imports"
 ```
 
-This may be a question best posed during implementation, when limitaions are better understood.
+This may be a question best posed during implementation, when limitations are better understood.
