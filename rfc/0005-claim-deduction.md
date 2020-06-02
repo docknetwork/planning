@@ -160,6 +160,49 @@ For reasoner performance. There will likely be a restriction that every implied 
 (<#alice> <#bob> <#charlie>) -> (<#alice> <#charlie> <#bob>)
 ```
 
+### Potential Encoding Within a Verifiable Presentaition
+
+This RFC does not prescribe a method for bundling credentials with a derivation. The following is an example of how it might me done.
+
+```json
+{
+  "@context": "https://www.w3.org/2018/credentials/v1",
+  "type": "VerifiablePresentation",
+  "verifiableCredential": [
+    {
+      "@context": "https://www.w3.org/2018/credentials/v1",
+      "type": [
+        "VerifiableCredential"
+      ],
+      "issuer": "https://example.edu/issuers/goodhospital",
+      "credentialSubject": {
+        "id": "did:example:bobertjr",
+        "http://example.com/mother": "did:example:bobert",
+        "http://example.com/father": "did:example:bobette"
+      },
+      "...": "..."
+    },
+    {
+      "@context": "https://www.w3.org/2018/credentials/v1",
+      "issuer": "did:example:aristotle",
+      "@included": [
+        {
+          "Some ruleset representaion": "goes here."
+        }
+      ],
+      "...": "..."
+    }
+  ],
+  "https://dock.io/rdf/logic": {
+    "Some derivation representaion": "goes here."
+  },
+  "proof": {
+    "type": "RsaSignature2018",
+    "verificationMethod": "did:example:bobette#keys-1"
+  }
+}
+```
+
 ## Deferred Decisions
 
 - Choice of derivation format
