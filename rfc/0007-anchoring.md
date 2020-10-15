@@ -2,19 +2,19 @@ Authors: *Andrew Dirksen*
 
 ## Abstract
 
-This RFC proposes an on-chain generic proof of existence module. This RFC also proposes additions to the Dock sdk to support [linked data proofs](https://w3c-ccg.github.io/ld-proofs/) of existence over credentials and possibly over presentations and possibly over generic jsonld.
+This RFC proposes an on-chain generic proof of existence module and accompanying tooling for posting anchors to the chain.
 
 ## Suggested Reading
 
-- https://w3c-ccg.github.io/ld-proofs/
+None
 
 ## Background
 
-*Write an introduction to the topic if helpful.*
+Anchoring in Dock chain has been planned for some time now. Proof of existence is a well known application of blockchain.
 
 ## Motivation
 
-We want to be able to prove that a credential was issued before a specific time.
+Explicit support for PoE on the Dock chain.
 
 ## Previous Work
 
@@ -23,107 +23,42 @@ We want to be able to prove that a credential was issued before a specific time.
 
 ## Goals
 
-*Bulleted list suggested.*
+- simple proof of existence using dockchain
+- simple and pleasant UX for creating and verifying anchors
+- SDK example for posting an anchor
+- SDK example for checking an anchor
 
 ## Non-Goals
 
-*Here is a chance to limit feature creep and reduce confusion.*
+- proof of attestation
+- SDK wrapper around the auto-generated rpc interface for the anchoring module. Developers can use that interface directly.
 
 ## Expected Outcomes
 
-*Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
+A new on-chain Anchor module exposing a single on-chain function. A command line tool for posting anchors.
 
 ## RFC
 
-*Main body. Make the plan descriptive enough to encourage productive suggestions.*
+This RFC proposes a very simple on-chain module to allow posting of fixed size anchors.
 
-> *"I didn’t have time to write a short letter, so I wrote a long one instead."*
-> *--Mark Twain*
+This RFC proposes an easy to install and user friendly command line tool for posting anchors to dockchain.
 
 ## Deferred Decisions
 
-*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed decisions.*
+None
 
 ## Other Considerations
 
-*Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
+[Linked data proofs](https://w3c-ccg.github.io/ld-proofs/) is work-in-progress standard for attaching proofs of attestation, authentication, and more, to linked data (usually jsonld). It is, however, a work in progress; it's apt to have bugs and to change in the future. In addition, implementing and using a new "existence" proofPurpose is expected to pose unwanted technical challenges. Check out the [older version of this RFC](https://github.com/docknetwork/planning/blob/f411e2a357fe03e292d6aea1efedd0348b902087/rfc/0007-anchoring.md#problems) for more info.
 
-## Problems
+Blockcerts implements "MerkleProof2019" which is, from what I can tell, a proof of on-chain attestation. The [spec](https://w3c-dvcg.github.io/lds-merkle-proof-2019/) seems to have disappeared. It could be possible to use blockcerts 3.0 by standardizing a [blink](https://w3c-ccg.github.io/blockchain-links/) for dockchain, but:
+- we would run into the same problems implementing linked data proofs and
+- AFAIK blockcerts prove attestation, which is not our goal.
 
-### Use Cases Are Hard To Predict
-
-What will this be used for?
-
-### Composition of linked data proofs
-
-The linked data proofs working group draft allows for multiple proofs to be composed and expressed as a [proof chain](https://w3c-ccg.github.io/ld-proofs/#proof-chains). The nature of a proof chains dictates that they need to be *ordered* lists. The current working group draft suggests an encoding for these proof chains.
-
-```json
-{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://www.w3.org/2018/credentials/examples/v1"
-  ],
-  "title": "Hello World!",
-  "proofChain": [{
-    "type": "Ed25519Signature2018",
-    "proofPurpose": "assertionMethod",
-    "created": "2019-08-23T20:21:34Z",
-    "verificationMethod": "did:example:123456#key1",
-    "domain": "example.org",
-    "jws": "eyJ0eXAiOiJK...gFWFOEjXk"
-  },
-  {
-    "type": "RsaSignature2018",
-    "proofPurpose": "assertionMethod",
-    "created": "2017-09-23T20:21:34Z",
-    "verificationMethod": "https://example.com/i/pat/keys/5",
-    "domain": "example.org",
-    "jws": "eyJ0eXAiOiJK...gFWFOEjXk"
-  }]
-}
-```
-
-The above document is jsonld. In jsonld "lists", as used above, don't express order so this representaion may not be sound. If proof-chains are off the table, then [proof-sets](https://w3c-ccg.github.io/ld-proofs/#proof-sets) are an alternative. The limitation of proof-sets is that elements of a proof-set don't refer to previous elements. Consider the following:
-
-```json5
-{
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1",
-    "https://www.w3.org/2018/credentials/examples/v1"
-  ],
-  "title": "Hello World!",
-  "proof": [{
-    "type": "Ed25519Signature2018",
-    "proofPurpose": "assertionMethod",
-	...
-  },
-  {
-    "type": "MerkelProof2018",
-    "proofPurpose": "proofOfExistence",
-	...
-  }]
-}
-```
-
-In that example, the PoE proves that the credential was constructed before a certain block. It never proves an upper bound on when the credential was issued which makes it pretty useless.
-
-### vc-js support for proofs of existence
-
-[vc-js](https://github.com/digitalbazaar/vc-js), has no idea how to handle proof of existence (citation needed), and doesn't provide an interface we can use to plug into our poe cabability.
-
-### Special Care must be paid to the "issuer" field
-
-vc-js verifies the "issuer" field of each credential against the "proof" field. Users may rely on this behaviour. Explicit Ethos for Claim Deduction [relies](https://github.com/docknetwork/sdk/blob/f346eb7cdd596c56aa685f3dcc8cb467751c7adb/src/utils/cd.js#L76) on this behaviour. Proofs of existence don't relate solely to credentials and the "issuer" field is not verifiable via a PoE.
+Use of the on-chain [Blob](https://github.com/docknetwork/dock-substrate/blob/master/runtime/src/blob.rs) storage was considered for storing anchors but the blob module doesn't store block numbers. Blob entries store extra information (more than just a hash) that is not needed for PoE. Blobs require a DID to be created in order to post. This extra step would be frictitious to users.
 
 ## Open Questions
 
-This RFC proposes a method for proving some data existed before a specific block. On PoW chains, it's possible to also prove a lower bound on credential issuance by including a block hash in the credential before issuing. This is out of scope, but maybe this type of proof can be implemented using Dockchain as well.
+Should accompanying tooling implement merkle batching? https://github.com/lovesh/merkle_trees https://github.com/docknetwork/mrkl
 
-*Use this section to invite specific feedback from reviewers.*
-
----
-
-*Final Checklist*
-
-- *Would your RFC benefit from some last-minute visuals?*
+This RFC proposes a method for proving some data existed before a specific block. On PoW chains, it's possible to also prove a lower time bound on the creation of certain types of data by incorporating a block hash when constructing the data. This is out of scope, but maybe this type of proof can be implemented using Dockchain as well. Unsure if/how this method can be applied to generic payloads.
