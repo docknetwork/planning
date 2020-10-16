@@ -35,7 +35,7 @@ Explicit support for PoE on the Dock chain.
 
 ## Expected Outcomes
 
-A new on-chain Anchor module exposing a single on-chain function. A command line tool for posting anchors.
+A new on-chain Anchor module exposing a single on-chain function. A command line tool and/or fe.dock.io widget for posting anchors.
 
 ## RFC
 
