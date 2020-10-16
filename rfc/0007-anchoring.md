@@ -45,7 +45,11 @@ This RFC proposes an easy to install and user friendly command line tool for pos
 
 ## Deferred Decisions
 
-None
+Anchors are expected to be modeled as a mapping from fixed size byte array, `[u8; K]`, to block number. `[u8; K] => BlockNumber`. The on-chain module is agnositic to hash algorithm.
+
+The command line tool for posting anchors is expected to use either sha256 or blake2s.
+
+Consider whether 32 bytes is large enough to represent anchors for the life of the chain. Use larger or dynamically sized anchors if necessary.
 
 ## Other Considerations
 
@@ -62,3 +66,5 @@ Use of the on-chain [Blob](https://github.com/docknetwork/dock-substrate/blob/ma
 Should accompanying tooling implement merkle batching? https://github.com/lovesh/merkle_trees https://github.com/docknetwork/mrkl
 
 This RFC proposes a method for proving some data existed before a specific block. On PoW chains, it's possible to also prove a lower time bound on the creation of certain types of data by incorporating a block hash when constructing the data. This is out of scope, but maybe this type of proof can be implemented using Dockchain as well. Unsure if/how this method can be applied to generic payloads.
+
+The chain's runtime not expected to ever read from anchor storage. Would it be better to not write anchors to chainstate, but rather look them up in transaction history? Future light client functionality may be hindered if anchors are not in chainstate.
