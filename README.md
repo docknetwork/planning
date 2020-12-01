@@ -19,6 +19,8 @@ Couple arbitrary decisions for style consistency:
 
 Want to change something about this repo? Go ahead. The guidelines provided are intended to help you; they need not be set-in-stone.
 
-Treat this repository as public. It will likely be published later.
-
 *Thanks to https://eng.lyft.com/awesome-tech-specs-86eea8e45bb9 for the guide on which these templates were initially based.*
+
+## License
+
+The contents of this repository are licensed under either of [Apache License, Version 2.0](LICENSE-APACHE) or [MIT license](LICENSE-MIT), at your option.
