@@ -70,14 +70,25 @@ Schema-based delegation vs. pure claim deduction. This decision belongs in [Dele
 A fully on-chain delegation graph was considered:
 
 ```
-map delegations: Did => BTreeSet<(Permission, Did)>
+map delegations: Did => BTreeMap<Policy, Vec<Did>>
+...
+#[bitmap]
+enum Permissions {
+	MayDelegate,
+	MayClaim,
+}
+struct Policy {
+	allowed: Vec<BlobName>,
+	perms: Permissions,
+}
 ```
 
 Cons:
 
-- chain-state utilization scales with number of delegations
-- precludes other types of delegation logic implemented by other parties in the future e.g. `if [?did type Knight] then [did:example:self claims [?did mayClaim _:0]]`
+- chain-state utilization scales with number of delegations, and also with complexity of delegation logic
+- Hard coding delegation rules on-chain precludes other types of delegation logic implemented by other parties in the future e.g. `if [?did type Knight] then [did:example:self claims [?did mayClaim _:0]]`
 - not interoperable? could other did methods express this same data somehow?
+- The on-chain logic is complex
 
 ### capabilityDelegation
 

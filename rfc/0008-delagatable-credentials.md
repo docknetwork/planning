@@ -25,7 +25,9 @@ See Suggested Reading.
 ## Goals
 
 - Features should be extendable. The implementation should not prevent future innovations by Dock or by other parties. e.g. schema-based delegations.
-- Interoperability between parties using the new ontology. Issuers and verifiers should be able to agree on semantics.
+- Interoperability
+  - Interoperability between parties using the new ontology. Issuers and verifiers should be able to agree on semantics.
+  - Use well known RDF ontologies like foaf where possible.
 - Ontology semantics should be clear, succinct, non-ambiguous, and logically valid with respect to the RDF data model. 
 - Should not be VCDM specific. Other methods of attestation should be possible [e.g.](./0014-public-attestation.md) .
 
@@ -49,6 +51,9 @@ Proposed actions:
 - Implement and publish the related logical rules, most likely in the Dock javascript SDK repo.
 - Concept doc.
 - Tutorial doc.
+
+It's possible there already exists a ontology with support for delegation. The implementer should attempt to find such an ontology. If it suits this RFC's use-case it should be used instead of a custom ontology.
+<!-- https://www.google.com/search?q=rdf+delegation+chain+ontology -->
 
 ## Deferred Decisions
 
