@@ -1,10 +1,5 @@
-*This document is a written proposal of some future effort.*
 
-*The italicized items should be deleted or commented out before submission.*
-
-*If a section has no content, simply write "None", "Unspecified" or "NA".*
-
-Authors: *Andrew Dirksen*
+Authors: Andrew Dirksen
 
 ## Abstract
 
@@ -96,10 +91,4 @@ The `object` of [https://www.w3.org/TR/did-core/#capability-delegation](capabili
 
 ## Open Questions
 
-*Use this section to invite specific feedback from reviewers.*
-
----
-
-*Final Checklist*
-
-- *Would your RFC benefit from some last-minute visuals?*
+Unspecified
