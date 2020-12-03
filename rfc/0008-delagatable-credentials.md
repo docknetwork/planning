@@ -24,18 +24,20 @@ See Suggested Reading.
 
 ## Goals
 
-- Features should be extendable. The implementation should not prevent future innovations by Dock or by other parties. e.g. schema-based delegations.
+- Features should be extendable.
+  - The implementation should not prevent future innovations by Dock or by other parties.
+  - New features like schema-based delegations should remain possible.
 - Interoperability
   - Interoperability between parties using the new ontology. Issuers and verifiers should be able to agree on semantics.
   - Use well known RDF ontologies like foaf where possible.
-- Ontology semantics should be clear, succinct, non-ambiguous, and logically valid with respect to the RDF data model. 
-- Should not be VCDM specific. Other methods of attestation should be possible [e.g.](./0014-public-attestation.md) .
+- Ontology semantics should be clear, succinct, non-ambiguous, and logically consistent. 
+- Should not be VCDM specific. Other methods of attestation (e.g. [Public Attestation](./0014-public-attestation.md)) should remain possible.
 
 ## Non-Goals
 
 - On-chain delegations, see [Public Delegation](./0013-public-delegation.md).
 - Schema-based delegations. Logic-based and Schema-based delegation are not mutually exclusive, but Logic-based delegation is what this RFC proposes.
-- Offline credential delegation required holders store and present credential delegation chains with their credentials. This requirement is expected to damage UX for holders but is out of scope for this RFC. The issue is addressed by [Public Delegation](./0013-public-delegation.md).
+- Offline credential delegation requires holders store and present credential delegation chains with their credentials. This requirement is expected to damage UX for holders but a remedy is out of scope for this RFC. The issue is addressed by [Public Delegation](./0013-public-delegation.md).
 
 ## Expected Outcomes
 
@@ -61,16 +63,14 @@ Unspecified
 
 ## Other Considerations
 
-Unspecified
+VCDM credential Schema delegations.
 
 ## Open Questions
-
-Unspecified
 
 ### Data Restrictions
 
 How can logic-based delegations specify generic predicates on data like "the object ?a is an integer literal" or "?a == not(?b)"
 
-Perhaps [Generic Predicates](https://github.com/docknetwork/rify/issues/7) would be required.
+Perhaps [Generic Predicates](https://github.com/docknetwork/rify/issues/7) are a solution.
 
 Schema formats often allow expressing restrictions on values, like "?a is less than 4", but to my knowledge, these restrictions are not extensible. There isn't a way to introduce new predicates like "?a is even". Unsure whether multi-element predicates like "?a == not(?b)" are supported in any existing graph schema language. https://www.w3.org/TR/shacl/
