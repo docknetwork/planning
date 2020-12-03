@@ -1,36 +1,27 @@
-*This document is a written proposal of some future effort.*
-
-*The italicized items should be deleted or commented out before submission.*
-
-*If a section has no content, simply write "None", "Unspecified" or "NA".*
 
 Authors: Andrew Dirksen
 
 ## Abstract
 
-This RFC proposes a way for DIDs to publically attests to arbirarily large RDF claimgraphs.
-These attestations are not stored on-chain; rather, the attester chooses a storage method.
+This RFC proposes a way for DIDs to publically attests to arbirary (and arbitrarily large) RDF claimgraphs.
+These attestations are not stored on-chain; rather, the attester chooses a storage method by specifying a Uri.
 
 ## Suggested Reading
 
-*Bulleted list suggested.*
-
-*If a team member would require additional technical information before reading the rest of this document, link to that information from this section. Each item listed here adds to the total reading time for this document.*
+- [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework)
+- [RDF Containers](https://www.w3.org/TR/rdf-schema/#ch_containervocab)
 
 ## Background
 
-I've played with the idea for a public attestation registry for years now. The team discussed attaching attestation semantics to dereferencable anchors (Danks).
-
-This RFC proposes public attestations, but keeps dereferencable anchors out of scope.
+We discussed attaching attestation semantics to dereferencable anchors but have not persued the feature. This RFC proposes Public Attestations, but keeps dereferencable anchors out of scope.
 
 ## Motivation
 
-Public attestations are a generalization of public delegation attestations.
+Public attestations are a generalization of public delegations. They will enable the proposed [Public Delegation](./0013-public-delegation.md) feature.
 
 ## Previous Work
 
-*What previous efforts, if any, have been made to solve these problems?*
-*Any other related efforts?*
+Unspecified
 
 ## Goals
 
@@ -55,32 +46,109 @@ Public attestations are a generalization of public delegation attestations.
 
 ## Non-Goals
 
-*Here is a chance to limit feature creep and reduce confusion.*
+- Hashlinks/Dereferencable Anchors
 
 ## Expected Outcomes
 
-*Mention the outcomes you expect, intentional and unintentional, beneficial and harmful.*
+The proposed feature is highly generic and extensible. It will enable third parties to invent new use-cases.
 
 ## RFC
 
-Attestations may be mutable without making changes on-chain. For example, when an attestation is an http\[s\] url the referred document can be changed. When dereferencing an attestation, the dereferencer may choose to reject such urls.
+### On-Chain Component
 
-For some URL schemes, http[s] for example, dereferencing of attestations may be tracked by the owner of the target webserver. The choice of storage location belongs to the attester, but a dereferencer wishing to avoid tracking may choose to reject such urls.
+The runtime module is as simple as possible. The design aims to store as much data off-chain as possible.
+
+```
+// Storage
+map claims: Did => Url,
+
+// Extrinsics
+fn set_claim(origin: AccountId, claimer: Did, claim: Option<Url>, sig: DidSignature) -> _;
+```
+
+*Note: Replay protection needs to be implemented but is omitted from this example for simplicity.*
+
+### Semantics
+
+In RDF terms, the following implication relationship is axiomized for dock DIDs.
+
+If an entry `did => url` exists in the "claims" map at the current block `[did dock:attestsDocumentContents url]`.
+
+A Url can be said to dreference to an RDF claimgraph if and only if the document to which it points has a mime-type that is an RDF serialization format and the document body is a valid instance of that serialization format.
+
+### Curious Agent
+
+Use cases like [Public Credential Delegation](./0013-public-delegation.md) will require a method for automatic discovery of data. This RFC proposes a supergraph crawler with programmable "Curiosity". Curiosity will be represented as logical rules (as in claim deduction) or as SPARQL queries. The difference between the two is that logical are applied recursively while SPARQL queries are not.
+
+Following is an example of the logic-based Curiosity Suite that might be used for discovering delegations. It would be appended to the ruleset introduced by [RFC 0008](./0008-delagatable-credentials.md) before being applied by the Curious Agent.
+
+```
+if [?a dock:mayDelegate ?b] then [?a rdf:type dock:Delegate]
+if [?a dock:mayClaim ?b] then [?a rdf:type dock:Delegate]
+if [?a rdf:type dock:Delegate] then [?a rdf:type curiosity:Interesting]
+if [?a rdf:type dock:Delegate]
+  and [?a dock:attestsDocumentContent ?b]
+  then [?b rdf:type curiosity:Interesting]
+```
+
+On infering a tuple of form `[?a rdf:type curiosity:Interesting]`, the Curious Agent will initialize an asyncronous lookup of the resource in question. While the lookup is in progress reasoning can continue. When the lookup is complete, a semantically true RDF representaion of the resource will be inserted into the agent's knowlege graph. For example, when the resource is a DID document, the claims added to would look like this:
+
+```turtle
+did:example:a dock:dereferencesTo [
+	rdfs:member [
+		rdf:subject did:example:a ;
+		rdf:predicate dock:attestsDocumentContent
+	] ;
+	... # rest of the did doc
+] .
+```
+
+The crawler will be written in Rust.
+
+### Addition to the Dock DID Resolver
+
+Public attestations will be displayed in the DID document of the attester. This enables compatability accross DID methods. Other DID methods may include the same predicate.
+
+```
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "<Did>",
+  "verificationMethod": [{
+    "id": "<Did>#key-1",
+    "type": "Ed25519VerificationKey2018",
+    "controller": "did:example:123456789abcdefghi",
+    "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+  }],
+  "authentication": [ "#key-1" ],
+  "https://dock.io/rdf/attestsDocumentContent": "<Url>"
+}
+```
+
+### Demo
+
+Lots of tempting use cases for this one that could serve as a demo.
+
+- Decentralized social network
+  - All data, posts, favorites, [foaf](http://www.foaf-project.org/) statements is contained in attested documents, or sub-documents. Media can be pinned in ipfs.
+- Attested builds
+  - A trusted party compiles a program and attests that `[src.tar.gz <compilesTo> ipfs://adfa/bin.tar.gz]` a user can download the trusted build rather than build the source themself.
+- Self Publishing Music
+  - An independent musical artist self-publishes a free album. They attest to the album metadata using an open specifications like [music ontology](http://musicontology.com/specification). The actual audio data for tracks is pinned on ipfs. The Curious Agent can locate the music of known authors and pass it to the users streaming program.
+- Automatic Retrieval of Media
+  - A curator scans a movie database and attests to the resultant data. Another party attests to the links between movies and urls where they can be streamed legally. A user indicates they want to watch all the movies featuring [Michael Cera](https://www.wikidata.org/wiki/Q309555). The Curious Agent seeks out the movies in question and the users browser automatically begins streaming.
+- Public attestations to linked biometrics.
+  - If a DID is authorized to open a door, that DID may attest to the biometric data of the person controllong it. The door can use that attestation in place of a credential signed by the DID. This allows authorized party to gain secure access to the door without a keycard. The authorized party controls the attested biometrics data and can change/revoke it at will.
+
+I think it's worth dedicating some time to implement a demo for Public Attestations.
 
 ## Deferred Decisions
 
-*List the decisions that this RFC explicitly does not make. Optionally enumerate potential approaches to the listed decisions.*
+- The choice of representation for Curiosity Suites is left to the implementer. It is assumed Curiosity Suites will be represented as either [rify](https://github.com/docknetwork/rify) rules or as SPARQL, but other options exist; Prolog may even be a viable option.
 
 ## Other Considerations
 
-*Discuss approaches you considered (but ultimately decided against). This serves as a form of documentation and can also preempt suggestions from reviewers to investigate approaches you’ve already discarded.*
+Unspecified
 
 ## Open Questions
 
-*Use this section to invite specific feedback from reviewers.*
-
----
-
-*Final Checklist*
-
-- *Would your RFC benefit from some last-minute visuals?*
+We need a cool nickname for the feature.
