@@ -59,7 +59,7 @@ Unspecified
 ## Non-Goals
 
 - Hashlinks/Dereferencable Anchors
-- Vendor lockin (to Dock)
+- Vendor lock-in (to Dock)
 
 ## Expected Outcomes
 
@@ -91,7 +91,7 @@ If an entry `did => url` exists in the "claims" map at the current block, then `
 
 Use cases like [Public Credential Delegation](./0013-public-delegation.md) will require a method for automatic discovery of data. This RFC proposes a Supergraph crawler with programmable "Curiosity". Curiosity will be represented as logical rules (as in Claim Deduction) or as SPARQL queries. (The difference between the two is that logical rules are applied recursively while SPARQL queries are not.)
 
-Following is an example of the logic-based Curiosity Suite that might be used for discovering delegations. It would be appended to the ruleset introduced by [RFC 0008](./0008-delagatable-credentials.md) before being applied by the Curious Agent.
+Following is an example of the logic-based Curiosity Suite that might be used for discovering delegations. It would be appended to the ruleset introduced by [RFC 0008](./0008-delegatable-credentials.md) before being applied by the Curious Agent.
 
 ```
 if [?a dock:mayClaim ?b] then [?a rdf:type curiosity:Interesting]
