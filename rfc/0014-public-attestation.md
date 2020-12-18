@@ -4,7 +4,7 @@ Authors: Andrew Dirksen
 ## Abstract
 
 This RFC proposes a way for DIDs to publically attests to arbirary (and arbitrarily large) RDF claimgraphs.
-These attestations are not stored on-chain; rather, the attester chooses a storage method by specifying a Uri.
+These attestations are not stored on-chain; rather, the attester chooses a storage method by specifying an IRI.
 
 ## Suggested Reading
 
@@ -15,7 +15,7 @@ These attestations are not stored on-chain; rather, the attester chooses a stora
 
 We discussed attaching attestation semantics to dereferencable anchors but have not persued the feature. This RFC proposes Public Attestations, but keeps dereferencable anchors out of scope.
 
-A Url can be said to dreference to an RDF claimgraph if and only if the document to which it points has a mime-type that is an RDF serialization format and the document body is a valid instance of that serialization format.
+An IRI can be said to dreference to an RDF claimgraph if it refers to a document with a mime-type that is an RDF serialization format and the document body is a valid instance of that serialization format.
 
 ### Terms
 
@@ -73,10 +73,10 @@ The runtime module is as simple as possible. The design aims to keep as much dat
 
 ```
 // Storage
-map claims: Did => Url,
+map claims: Did => Iri,
 
 // Extrinsics
-fn set_claim(origin: AccountId, claimer: Did, claim: Option<Url>, sig: DidSignature) -> _;
+fn set_claim(origin: AccountId, claimer: Did, claim: Option<Iri>, sig: DidSignature) -> _;
 ```
 
 *Note: Replay protection needs to be implemented but is omitted from this example for simplicity.*
@@ -85,7 +85,7 @@ fn set_claim(origin: AccountId, claimer: Did, claim: Option<Url>, sig: DidSignat
 
 In RDF terms, the following implication relationship will be considerd an axiom:
 
-If an entry `did => url` exists in the "claims" map at the current block, then `[did dock:attestsDocumentContents url]`.
+If an entry `did => iri` exists in the "claims" map at the current block, then `[did dock:attestsDocumentContents iri]`.
 
 ### Curious Agent
 
@@ -134,7 +134,7 @@ Public attestations will be displayed in the DID document of the attester. This 
     "publicKeyBase58": "H3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
   }],
   "authentication": [ "#key-1" ],
-  "https://dock.io/rdf/attestsDocumentContent": "<Url>"
+  "https://dock.io/rdf/attestsDocumentContent": "<Iri>"
 }
 ```
 
