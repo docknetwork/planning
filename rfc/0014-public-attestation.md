@@ -151,7 +151,7 @@ Lots of tempting use cases for this one that could serve as a demo.
 - Automatic Retrieval of Media
   - A curator scans a movie database and publically attests to the resultant data. Another party attests to the links between movies and urls where they can be streamed legally. A user indicates they want to e.g. watch all the movies featuring [Michael Cera](https://www.wikidata.org/wiki/Q309555). The Curious Agent seeks out the movies in question and the users browser automatically begins streaming.
 - Public attestations to linked biometrics.
-  - If a DID is authorized to open a electronically secured door, that DID may publically attest to the biometric data of the person controlling it. The door can use that attestation in place of a private attestation (a credential signed by the DID). This allows authorized party to gain secure access to the door without carrying a keycard. The authorized party controls the attested biometrics data and can change/revoke it at will.
+  - If a DID is authorized to open an electronically secured door, that DID may publically attest to the biometric data of the person controlling it. The door can use that attestation in place of a private attestation (a credential signed by the DID). This allows authorized party to gain secure access to the door without carrying a keycard. The authorized party controls the attested biometrics data and can change/revoke it at will.
 
 I think it's worth dedicating some time to implement a demo for Public Attestations.
 

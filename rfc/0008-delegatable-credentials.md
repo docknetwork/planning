@@ -54,7 +54,7 @@ Proposed actions:
 - Concept doc.
 - Tutorial doc.
 
-It's possible there already exists a ontology with support for delegation. The implementer should attempt to find such an ontology. If it suits this RFC's use-case it should be used instead of a custom ontology.
+It's possible there already exists an ontology with support for delegation. The implementer should attempt to find such an ontology. If it suits this RFC's use-case it should be used instead of a custom ontology.
 <!-- https://www.google.com/search?q=rdf+delegation+chain+ontology -->
 
 ## Deferred Decisions
