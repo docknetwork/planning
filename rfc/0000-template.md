@@ -8,6 +8,8 @@ Authors: *Name One, Name Two*
 
 ## Abstract
 
+*Do your best to use layman's terms in this section.*
+
 ## Suggested Reading
 
 *Bulleted list suggested.*
